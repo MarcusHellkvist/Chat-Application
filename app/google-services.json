@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "727730329221",
+    "firebase_url": "https://chat-app-iths2020.firebaseio.com",
+    "project_id": "chat-app-iths2020",
+    "storage_bucket": "chat-app-iths2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727730329221:android:b61c53bc00bd406388fbec",
+        "android_client_info": {
+          "package_name": "com.example.chatapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727730329221-rplvmerkks1rmhdo028gfnenp7efl7bb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIFz6tHHhKF_ryMC1iZq0CkBgDQzjsVzs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727730329221-rplvmerkks1rmhdo028gfnenp7efl7bb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
