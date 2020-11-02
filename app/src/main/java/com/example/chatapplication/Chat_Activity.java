@@ -1,6 +1,7 @@
 package com.example.chatapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 
 public class Chat_Activity extends AppCompatActivity {
