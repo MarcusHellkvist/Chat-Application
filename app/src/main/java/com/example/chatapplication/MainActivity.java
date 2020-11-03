@@ -67,15 +67,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            Toast.makeText(this, "You don't have an accunt! ", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-
-        }
+       if(currentUser != null) {
+           Intent intent = new Intent (this, Chat_Activity.class);
+           startActivity(intent);
+       }
     }
 
 
