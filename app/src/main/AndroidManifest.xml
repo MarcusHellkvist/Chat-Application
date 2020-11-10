@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Chat_Activity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".Chat_Activity" />
         <activity android:name=".SingUp" />
         <activity android:name=".MainActivity">
             <intent-filter>
