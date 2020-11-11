@@ -32,11 +32,8 @@ import com.google.firebase.storage.StorageReference;
 
 public class ProfileActivity extends AppCompatActivity implements ProfileDialog.ProfileDialogListener {
 
-    private static final int REQUEST_CODE_CAMERA = 1;
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseStorage storage;
     private CollectionReference usersRef;
 
     private ImageView ivProfilePicture;
@@ -54,7 +51,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         // FIREBASE
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
         usersRef = db.collection("users");
         currentUserId = mAuth.getCurrentUser().getUid();
 
@@ -93,7 +89,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                     }
                 });
     }
-
 
     private void setUserData() {
         String idNumber = "#3391";
