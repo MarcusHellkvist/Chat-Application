@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 
 public class ProfileActivity extends AppCompatActivity implements ProfileDialog.ProfileDialogListener {
 
+    private static final int REQUEST_CHOOSE_PICTURE = 1;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private CollectionReference usersRef;
@@ -42,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
 
     private User user;
     private String currentUserId;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
 
         // IMAGE VIEWS
         ivProfilePicture = findViewById(R.id.iv_profile_picture);
+        ivProfilePicture.setOnClickListener(changePictureListener);
         
         // TEXT VIEWS
         tvIdNumber = findViewById(R.id.tv_id_number);
@@ -88,6 +92,22 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHOOSE_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null){
+            imageUri = data.getData();
+            ivProfilePicture.setImageURI(imageUri);
+        }
+    }
+
+    private void choosePicture(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_CHOOSE_PICTURE);
     }
 
     private void setUserData() {
@@ -139,6 +159,13 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         @Override
         public void onClick(View v) {
             openDialog();
+        }
+    };
+
+    private View.OnClickListener changePictureListener =  new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            choosePicture();
         }
     };
 
