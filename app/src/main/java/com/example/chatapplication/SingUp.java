@@ -3,6 +3,7 @@ package com.example.chatapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class SingUp extends AppCompatActivity {
+public class    SingUp extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -31,6 +32,7 @@ public class SingUp extends AppCompatActivity {
     private String idFirebase;
 
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class SingUp extends AppCompatActivity {
         email = findViewById(R.id.user_email_editText);
         pass = findViewById(R.id.user_pass_editText);
         name = findViewById(R.id.user_name);
-        userNumber = findViewById(R.id.user_telNumber);
+        //userNumber = findViewById(R.id.user_telNumber);
         db = FirebaseFirestore.getInstance();
 
 

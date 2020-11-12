@@ -4,7 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f8d3bc"
     tools:context=".SingUp">
+
+    // lagt in samma profilbild som Marcus la upp på profilsidan/JR
+    //
+    <ImageView
+        android:id="@+id/iv_profile_picture_sign_up"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="64dp"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/samplepic" />
 
     <EditText
         android:id="@+id/user_email_editText"
@@ -12,11 +26,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="172dp"
         android:ems="10"
-        android:hint="User Email"
+        android:hint="E-mail"
+        android:textAlignment="center"
+        android:textColor="#7C7777"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/iv_profile_picture_sign_up" />
 
     <EditText
         android:id="@+id/user_pass_editText"
@@ -24,52 +41,64 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="User Password"
-        android:inputType="textPersonName"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColor="#7C7777"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_email_editText" />
 
-    <Button
-        android:id="@+id/sing_up_button"
+    <EditText
+        android:id="@+id/user_confirm_pass_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:onClick="singUpButtonPressed"
-        android:text="sing up"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColor="#7C7777"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/user_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_telNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/user_pass_editText" />
 
     <EditText
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
-        android:textColor="#4A4444"
-        app:layout_constraintBottom_toTopOf="@+id/user_email_editText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <EditText
-        android:id="@+id/user_telNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Telephone Number"
+        android:text="User name"
+        android:textAlignment="center"
         android:textColor="#7C7777"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_pass_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/user_confirm_pass_editText" />
+    <Button
+        android:id="@+id/sing_up_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/button_background"
+        android:onClick="singUpButtonPressed"
+        android:text="  Sign up  "
+        android:textColor="@color/colorText"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
