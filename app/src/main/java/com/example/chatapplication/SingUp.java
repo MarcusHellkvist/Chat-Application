@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class    SingUp extends AppCompatActivity {
@@ -40,7 +39,7 @@ public class    SingUp extends AppCompatActivity {
 
         email = findViewById(R.id.user_email_editText);
         pass = findViewById(R.id.user_pass_editText);
-        name = findViewById(R.id.user_name);
+        name = findViewById(R.id.search_user_name);
         //userNumber = findViewById(R.id.user_telNumber);
         db = FirebaseFirestore.getInstance();
 
@@ -51,10 +50,10 @@ public class    SingUp extends AppCompatActivity {
     }
 
     public void singUpButtonPressed(View view) {
-        final String userEmail = email.getText().toString();
-        String userPass = pass.getText().toString();
-        final String userName = name.getText().toString();
-        final String userTelNumber = userNumber.getText().toString();
+        final String userEmail = email.getText().toString().trim();
+        String userPass = pass.getText().toString().trim();
+        final String userName = name.getText().toString().trim().toLowerCase();
+        final String userTelNumber = userNumber.getText().toString().trim();
 
         mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override

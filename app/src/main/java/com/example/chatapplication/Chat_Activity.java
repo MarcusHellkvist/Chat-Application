@@ -36,4 +36,10 @@ public class Chat_Activity extends AppCompatActivity {
             startActivity(new Intent(Chat_Activity.this, ProfileActivity.class));
         }
     };
+
+    public void addFriendPressed(View view) {
+        startActivity(new Intent(this,AddFriends.class));
+
+    }
+
 }

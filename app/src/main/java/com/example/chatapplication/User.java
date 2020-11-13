@@ -14,6 +14,12 @@ public class User {
         this.idFirebase = idFirebase;
     }
 
+    public User(String name, String email, String idFirebase) {
+        this.name = name;
+        this.email = email;
+        this.idFirebase = idFirebase;
+    }
+
     public User() {
     }
 
