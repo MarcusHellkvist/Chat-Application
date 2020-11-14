@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -130,6 +131,26 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
 
     }
 
+    private void getProfilePicture(){
+        StorageReference imagesRef = storageReference.child("images/" + currentUserId);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imagesRef.getBytes(ONE_MEGABYTE)
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        ivProfilePicture.setImageBitmap(bitmap);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
     private void choosePicture(){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -172,6 +193,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                                 Log.d("TAG", "onComplete: " + document.getData());
                                 user = document.toObject(User.class);
                                 setUserData();
+                                getProfilePicture();
                             } else {
                                 Log.d("TAG", "onComplete: No such data!");
                             }
