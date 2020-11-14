@@ -52,7 +52,7 @@ public class    SingUp extends AppCompatActivity {
     public void singUpButtonPressed(View view) {
         final String userEmail = email.getText().toString().trim();
         String userPass = pass.getText().toString().trim();
-        final String userName = name.getText().toString().trim().toLowerCase();
+        final String userName = name.getText().toString().trim();
         final String userTelNumber = userNumber.getText().toString().trim();
 
         mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

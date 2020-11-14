@@ -18,8 +18,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     @NonNull
     @Override
     public SearchAdapter.SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view =
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.search_friends_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_friends_list, parent, false);
         SearchAdapter.SearchViewHolder searchViewHolder = new SearchAdapter.SearchViewHolder(view, searchOnItemClickListener);
         return searchViewHolder;
     }
@@ -60,21 +59,34 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                     }
                 }
             });
+            searchAddIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null) {
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.OnAddIconClicked(position, v);
+                        }
+                    }
+                }
+            });
         }
     }
+
 
     public SearchAdapter(ArrayList<User> searchUser) {
         this.searchUser = searchUser;
         notifyDataSetChanged();
     }
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         void OnItemClicked(int position, View view);
+        void OnAddIconClicked(int position, View view);
     }
 
     private OnItemClickListener searchOnItemClickListener;
 
-    public void setSearchOnItemClickListener(OnItemClickListener searchOnItemClickListener){
+    public void setSearchOnItemClickListener(OnItemClickListener searchOnItemClickListener) {
         this.searchOnItemClickListener = searchOnItemClickListener;
     }
 
