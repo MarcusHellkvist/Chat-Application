@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Chat Application</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="user_name">User name</string>
+    <string name="sign_up">Sign up</string>
+    <string name="e_mail">E-mail</string>
+    <string name="no_account_sign_up_now">No account? Sign up now!</string>
+    <string name="login">login</string>
+    <string name="email">Email</string>
+    <string name="ichat">iChat</string>
+    <string name="log_out">Log out</string>
+    <string name="profile">Profile</string>
+    <string name="add_friend">add friend</string>
+    <string name="friends">FRIENDS</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="friend_name">Friend Name</string>
+    <string name="search_new_friends">Search New Friends</string>
 </resources>

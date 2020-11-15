@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f8d3bc"
+    android:background="@color/colorBackground"
     tools:context=".MainActivity">
 
     <TextView
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="124dp"
-        android:text="iChat"
+        android:text="@string/ichat"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,14 +24,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Email"
-        android:inputType="textWebEmailAddress|textPersonName"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
         android:textAlignment="center"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/logo_textView"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/user_pass_editText"
@@ -39,14 +40,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPersonName|textPassword"
         android:textAlignment="center"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/user_editText"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/login_button"
@@ -55,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/button_background"
         android:onClick="loginButtonPressed"
-        android:text="login"
+        android:text="@string/login"
         android:textColor="@color/colorText"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -70,7 +72,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/button_background"
         android:onClick="singUpButtonPressed"
-        android:text="sing up"
+        android:text="@string/sign_up"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -84,12 +86,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="No account? Sign up now!"
+        android:text="@string/no_account_sign_up_now"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_button" />
-    />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

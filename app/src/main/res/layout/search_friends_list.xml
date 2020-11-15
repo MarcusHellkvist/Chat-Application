@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
-    android:background="#2196F3"
+    android:background="@color/colorBackground"
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
@@ -24,10 +24,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/search_user_image"
             android:layout_toRightOf="@+id/search_user_image"
-            android:text="Friend Name"
+            android:text="@string/friend_name"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -41,7 +41,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:padding="8dp"
-            android:src="@drawable/add_icon" />
+            android:src="@drawable/add_icon"
+            android:contentDescription="TODO" />
 
 
     </RelativeLayout>
