@@ -1,11 +1,5 @@
 package com.example.chatapplication;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,22 +7,26 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddFriends extends AppCompatActivity {
 
@@ -54,6 +52,8 @@ public class AddFriends extends AppCompatActivity {
 
     private ArrayList<User> searchUser = new ArrayList<>();
     private ArrayList<String> idNewFriend = new ArrayList<>();
+
+    private ArrayList<String> friendListIds = new ArrayList<>();
 
 
     @Override
@@ -85,8 +85,33 @@ public class AddFriends extends AppCompatActivity {
                 profileIntent();
             }
 
+            // ADD FRIENDS ID TO CURRENT USER FRIENDS COLLECTIONS
             @Override
             public void OnAddIconClicked(int position, View view) {
+
+                String friendUserId = searchUser.get(position).getIdFirebase();
+                Map<String, Object> newFriend = new HashMap<>();
+                newFriend.put("uID", friendUserId);
+
+                db.collection("users")
+                        .document(idFirebase)
+                        .collection("friends")
+                        .document(friendUserId)
+                        .set(newFriend)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(AddFriends.this, "new friend added.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                /*
                 User newFriend = searchUser.get(position);
                 //view.setBackgroundResource(R.drawable.check_icon);
                 if (idFirebase.equals(idFriend)) {
@@ -120,13 +145,42 @@ public class AddFriends extends AppCompatActivity {
                             });
 
 
-                }
+                }*/
             }
         });
     }
 
 
+    // SEARCH FOR FRIENDS
     public void searchPressed(View view) {
+        searchUser.clear();
+
+        Toast.makeText(this, "search button pressed.", Toast.LENGTH_SHORT).show();
+        String searchPhoneNumber = searchEditText.getText().toString().trim();
+
+        db.collection("users")
+                .whereEqualTo("phoneNumber", searchPhoneNumber)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()){
+                                user = document.toObject(User.class);
+                                searchUser.add(user);
+                            }
+                            searchAdapter.notifyDataSetChanged();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        
+        /*
         searchUser.clear();
         String searchText = searchEditText.getText().toString().trim();
 
@@ -155,7 +209,7 @@ public class AddFriends extends AppCompatActivity {
 
             });
         }
-        searchAdapter.notifyDataSetChanged();
+        searchAdapter.notifyDataSetChanged(); */
     }
 
 

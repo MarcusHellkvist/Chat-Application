@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class Chat_Activity extends AppCompatActivity {
 
     private Button btnProfile;
+    private Button btnMyFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +21,9 @@ public class Chat_Activity extends AppCompatActivity {
 
         //BUTTON VIEWS
         btnProfile = findViewById(R.id.btn_profile);
+        btnMyFriends = findViewById(R.id.btn_myfriends);
         btnProfile.setOnClickListener(goToProfileListener);
+        btnMyFriends.setOnClickListener(goToMyFriendsListener);
 
     }
 
@@ -34,6 +37,13 @@ public class Chat_Activity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             startActivity(new Intent(Chat_Activity.this, ProfileActivity.class));
+        }
+    };
+
+    private View.OnClickListener goToMyFriendsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(Chat_Activity.this, ListOfMyFriends.class));
         }
     };
 
