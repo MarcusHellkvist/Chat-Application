@@ -89,9 +89,12 @@ public class AddFriends extends AppCompatActivity {
             @Override
             public void OnAddIconClicked(int position, View view) {
 
-                String friendUserId = searchUser.get(position).getIdFirebase();
+                final String friendUserId = searchUser.get(position).getIdFirebase();
                 Map<String, Object> newFriend = new HashMap<>();
                 newFriend.put("uID", friendUserId);
+
+                final Map<String, Object> currentUser = new HashMap<>();
+                newFriend.put("uID", idFirebase);
 
                 db.collection("users")
                         .document(idFirebase)
@@ -102,6 +105,17 @@ public class AddFriends extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(AddFriends.this, "new friend added.", Toast.LENGTH_SHORT).show();
+                                db.collection("users")
+                                        .document(friendUserId)
+                                        .collection("friends")
+                                        .document(idFirebase)
+                                        .set(currentUser)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(AddFriends.this, "funkar!", Toast.LENGTH_SHORT).show();    
+                                            }
+                                        });
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
