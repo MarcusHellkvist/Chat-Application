@@ -81,11 +81,11 @@ public class ListOfMyFriends extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 String documentId = document.getId();
                                 for (int i = 0; i < friendListId.size(); i++) {
-                                    if (friendListId.get(i).contentEquals(documentId)){
+                                    if (friendListId.get(i).contentEquals(documentId)) {
                                         // LÄGG TILL I FRIENDS ADAPTER
                                         user = document.toObject(User.class);
                                         myFriendsList.add(user);
@@ -113,8 +113,8 @@ public class ListOfMyFriends extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 String friendId = document.getId();
                                 friendListId.add(friendId);
                             }
@@ -130,31 +130,7 @@ public class ListOfMyFriends extends AppCompatActivity {
                 });
     }
 
-    /*
-    @Override
-    protected void onStart() {
-        String id = mAuth.getCurrentUser().getUid();
-        super.onStart();
-        db.collection("users").document(id).collection("friends")
-                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            return;
-                        }
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            DocumentSnapshot documentSnapshot = dc.getDocument();
-                            String name = documentSnapshot.getString("name");
 
-                            myFriendsList.add(0, new User(name));
-                            myFriendsAdapter.notifyDataSetChanged();
-
-
-                        }
-                    }
-                });
-    }*/
     public void chatIntent() {
         startActivity(new Intent(this, Chat_Activity.class));
     }

@@ -39,20 +39,14 @@ public class AddFriends extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private String idFriend;
     private String idFirebase;
     private User user;
-
 
     private final CollectionReference usersCollectionRef = db.collection("users");
     private DocumentReference documentReference;
     private CollectionReference friendsCollectionRef;
-    private Query query;
-
 
     private ArrayList<User> searchUser = new ArrayList<>();
-    private ArrayList<String> idNewFriend = new ArrayList<>();
-
     private ArrayList<String> friendListIds = new ArrayList<>();
 
 
@@ -93,73 +87,36 @@ public class AddFriends extends AppCompatActivity {
                 Map<String, Object> newFriend = new HashMap<>();
                 newFriend.put("uID", friendUserId);
 
-                final Map<String, Object> currentUser = new HashMap<>();
-                newFriend.put("uID", idFirebase);
+                final Map<String, Object> newIdFirebase = new HashMap<>();
+                newIdFirebase.put("uID", idFirebase);
 
-                db.collection("users")
-                        .document(idFirebase)
-                        .collection("friends")
-                        .document(friendUserId)
-                        .set(newFriend)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(AddFriends.this, "new friend added.", Toast.LENGTH_SHORT).show();
-                                db.collection("users")
-                                        .document(friendUserId)
-                                        .collection("friends")
-                                        .document(idFirebase)
-                                        .set(currentUser)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(AddFriends.this, "funkar!", Toast.LENGTH_SHORT).show();    
-                                            }
-                                        });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                /*
-                User newFriend = searchUser.get(position);
-                //view.setBackgroundResource(R.drawable.check_icon);
-                if (idFirebase.equals(idFriend)) {
-                    Toast.makeText(AddFriends.this, "cant be friend", Toast.LENGTH_SHORT).show();
+                if (idFirebase.equals(friendUserId)) {
+                    Toast.makeText(AddFriends.this, "can't be friend", Toast.LENGTH_SHORT).show();
                 } else {
-                    db.collection("users")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    //view.setBackgroundResource(R.drawable.check_icon);
+                    db.collection("users").document(idFirebase)
+                            .collection("friends").document(friendUserId)
+                            .set(newFriend)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (final QueryDocumentSnapshot document : task.getResult()) {
-                                            if (idFriend.equals(document.getId())) {
-                                                Log.d("tag", document.getId() + " = " + document.getData());
-                                                //idArray.add(document.getId());
-                                                friendsCollectionRef.document(document.getId()).set(document.getData())
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                Toast.makeText(AddFriends.this, "added", Toast.LENGTH_SHORT).show();
-                                                                friendIntent();
-                                                            }
-                                                        });
-                                            }
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(AddFriends.this, "new friend added.", Toast.LENGTH_SHORT).show();
+                                    db.collection("users").document(friendUserId)
+                                            .collection("friends").document(idFirebase)
+                                            .set(newIdFirebase);
 
-                                        }
-                                    } else {
-                                        Log.w("tag", "Error getting documents.", task.getException());
-                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
 
 
-                }*/
+                }
+
             }
         });
     }
@@ -178,8 +135,8 @@ public class AddFriends extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 user = document.toObject(User.class);
                                 searchUser.add(user);
                             }
@@ -193,37 +150,8 @@ public class AddFriends extends AppCompatActivity {
                         Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-        
-        /*
-        searchUser.clear();
-        String searchText = searchEditText.getText().toString().trim();
 
-        if (searchText.isEmpty()) {
-            searchUser.clear();
-        } else {
-            db.collection("users")
-                    .whereEqualTo("phoneNumber", searchText)
-                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            idFriend = document.getId();
-                            user = document.toObject(User.class);
-                            idNewFriend.add(idFriend);
-                            searchUser.add(user);
-                            //documentReference = db.collection("users").document(idFriend);
-                            searchAdapter.notifyDataSetChanged();
-                        }
-                    } else {
-                        Toast.makeText(AddFriends.this, task.getException().getLocalizedMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
 
-            });
-        }
-        searchAdapter.notifyDataSetChanged(); */
     }
 
 
@@ -239,13 +167,5 @@ public class AddFriends extends AppCompatActivity {
         startActivity(new Intent(this, ProfileActivity.class));
     }
 
-    public void friendsConnect() {
-        for (User user : searchUser) {
-            if (user.getIdFirebase().equals(idNewFriend)) {
-
-            }
-
-        }
-    }
 
 }
