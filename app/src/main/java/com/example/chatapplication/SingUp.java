@@ -54,6 +54,31 @@ public class    SingUp extends AppCompatActivity {
 
     public void singUpButtonPressed(View view) {
         final String userEmail = email.getText().toString().trim();
+
+        String userPass = pass.getText().toString().trim();
+        final String userName = name.getText().toString().trim();
+        final String userTelNumber = userNumber.getText().toString().trim();
+
+        mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    //get user id from Firebase
+                    idFirebase = mAuth.getCurrentUser().getUid();
+                    User user = new User(userName,userTelNumber,userEmail, idFirebase );
+                    db.collection("users").document(idFirebase).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Intent intent = new Intent(SingUp.this, Chat_Activity.class);
+                            startActivity(intent);
+                        }
+                    });
+                   // FirebaseUser user = mAuth.getCurrentUser();
+                    Toast.makeText(SingUp.this,"user done log in ",Toast.LENGTH_SHORT).show();
+                }else {
+
+                    Toast.makeText(SingUp.this,task.getException().getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
         final String userPass = pass.getText().toString().trim();
         final String confirmedPass = confrimPassword.getText().toString().trim();
         final String userName = name.getText().toString().trim().toLowerCase();
@@ -84,6 +109,7 @@ public class    SingUp extends AppCompatActivity {
 
                         Toast.makeText(SingUp.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
+
 
                 }
 

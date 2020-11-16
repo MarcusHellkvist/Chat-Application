@@ -22,6 +22,10 @@ public class User {
         this.idFirebase = idFirebase;
     }
 
+    public User(String name) {
+        this.name = name;
+    }
+
     public User() {
     }
 
