@@ -5,13 +5,15 @@ public class User {
     private String phoneNumber;
     private String email;
     private String idFirebase;
+    private String address;
 
 
-    public User(String name, String phoneNumber, String email, String idFirebase) {
+    public User(String name, String phoneNumber, String email, String idFirebase,String address) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.idFirebase = idFirebase;
+        this.address = address;
     }
 
     public User(String name, String email, String idFirebase) {
@@ -53,5 +55,13 @@ public class User {
 
     public void setIdFirebase(String idFirebase) {
         this.idFirebase = idFirebase;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

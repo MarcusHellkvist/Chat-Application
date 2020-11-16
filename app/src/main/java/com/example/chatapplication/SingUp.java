@@ -60,7 +60,7 @@ public class    SingUp extends AppCompatActivity {
         //final String userTelNumber = userNumber.getText().toString().trim();
 
         //Added an if statement to make sure the password is entered correctly. /JR
-        //if (pass.equals(confirmedPass)) {
+        if (userPass.equals(confirmedPass)) {
             mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -80,7 +80,7 @@ public class    SingUp extends AppCompatActivity {
                         // FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(SingUp.this, "user done log in ", Toast.LENGTH_SHORT).show();
 
-                         } else {
+                    } else {
 
                         Toast.makeText(SingUp.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -89,6 +89,9 @@ public class    SingUp extends AppCompatActivity {
 
 
             });
+        } else {
+            Toast.makeText(SingUp.this, "Passwords don't match, pls try again", Toast.LENGTH_LONG).show();
         }
+    }
 
 }
