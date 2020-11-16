@@ -90,6 +90,8 @@ public class AddFriends extends AppCompatActivity {
                 final Map<String, Object> newIdFirebase = new HashMap<>();
                 newIdFirebase.put("uID", idFirebase);
 
+
+
                 if (idFirebase.equals(friendUserId)) {
                     Toast.makeText(AddFriends.this, "can't be friend", Toast.LENGTH_SHORT).show();
                 } else {
@@ -113,8 +115,6 @@ public class AddFriends extends AppCompatActivity {
                                     Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
-
-
                 }
 
             }
