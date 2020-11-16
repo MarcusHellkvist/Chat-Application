@@ -73,8 +73,12 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
+
+        android:hint="User name"
+
         android:textAllCaps="false"
         android:hint="@string/user_name"
+
         android:textAlignment="center"
         android:textColor="#7C7777"
         android:textSize="18sp"

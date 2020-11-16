@@ -4,39 +4,48 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
-
     android:backgroundTint="#2196F3"
-
-    android:background="@color/colorBackground"
-
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        >
 
         <ImageView
-            android:id="@+id/search_user_image"
+            android:id="@+id/my_friend_imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:padding="2dp"
             android:src="@drawable/person_icon" />
 
         <TextView
-            android:id="@+id/search_user_name"
+            android:id="@+id/my_friend_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@+id/search_user_image"
-            android:layout_toRightOf="@+id/search_user_image"
-            android:text="@string/friend_name"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/my_friend_imageView"
+            android:layout_toRightOf="@+id/my_friend_imageView"
+            android:text="Friend Name"
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/my_friend_last_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/my_friend_name"
+            android:layout_marginLeft="16dp"
+            android:layout_toEndOf="@+id/my_friend_imageView"
+            android:layout_toRightOf="@+id/my_friend_imageView"
+            android:text="Last message or Mobile number "
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
         <ImageView
-            android:id="@+id/search_add_icon"
+            android:id="@+id/send_message_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -45,8 +54,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:padding="8dp"
-            android:src="@drawable/add_icon"
-            android:contentDescription="TODO" />
+            android:src="@drawable/send_icon" />
 
 
     </RelativeLayout>
