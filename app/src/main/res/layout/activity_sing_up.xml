@@ -61,13 +61,13 @@
         android:textAlignment="center"
         android:textColor="#7C7777"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/search_user_name"
+        app:layout_constraintBottom_toTopOf="@+id/user_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_pass_editText" />
 
     <EditText
-        android:id="@+id/search_user_name"
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -98,7 +98,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_user_name" />
+        app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
 
 

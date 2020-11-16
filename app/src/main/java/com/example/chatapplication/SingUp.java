@@ -42,7 +42,7 @@ public class    SingUp extends AppCompatActivity {
         email = findViewById(R.id.user_email_editText);
         pass = findViewById(R.id.user_pass_editText);
         confrimPassword = findViewById(R.id.user_confirm_pass_editText);
-        name = findViewById(R.id.search_user_name);
+        name = findViewById(R.id.user_name);
         //userNumber = findViewById(R.id.user_telNumber);
         db = FirebaseFirestore.getInstance();
 
