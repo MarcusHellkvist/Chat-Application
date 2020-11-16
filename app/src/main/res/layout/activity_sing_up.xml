@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="#f8d3bc"
     tools:context=".SingUp">
 
+    // lagt in samma profilbild som Marcus la upp på profilsidan/JR
+    //
     <ImageView
         android:id="@+id/iv_profile_picture_sign_up"
         android:layout_width="120dp"
@@ -16,8 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/samplepic"
-        android:focusable="true" />
+        app:srcCompat="@drawable/samplepic" />
 
     <EditText
         android:id="@+id/user_email_editText"
@@ -25,8 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="172dp"
         android:ems="10"
-        android:hint="@string/e_mail"
-        android:inputType="textEmailAddress"
+        android:hint="E-mail"
         android:textAlignment="center"
         android:textColor="#7C7777"
         android:textStyle="bold"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="@string/password"
+        android:hint="Password"
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="#7C7777"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="@string/confirm_password"
+        android:hint="Confirm Password"
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="#7C7777"
@@ -73,11 +73,8 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-
-        android:hint="User name"
-
         android:textAllCaps="false"
-        android:hint="@string/user_name"
+        android:hint="User name"
 
         android:textAlignment="center"
         android:textColor="#7C7777"
@@ -94,7 +91,7 @@
         android:layout_marginTop="60dp"
         android:background="@drawable/button_background"
         android:onClick="singUpButtonPressed"
-        android:text="@string/sign_up"
+        android:text="  Sign up  "
         android:textColor="@color/colorText"
         android:textSize="24sp"
         android:textStyle="bold"

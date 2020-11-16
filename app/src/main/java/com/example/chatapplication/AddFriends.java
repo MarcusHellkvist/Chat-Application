@@ -95,7 +95,8 @@ public class AddFriends extends AppCompatActivity {
                 if (idFirebase.equals(friendUserId)) {
                     Toast.makeText(AddFriends.this, "can't be friend", Toast.LENGTH_SHORT).show();
                 } else {
-                    //view.setBackgroundResource(R.drawable.check_icon);
+
+                    view.setBackgroundResource(R.drawable.check_icon); // add friends check
                     db.collection("users").document(idFirebase)
                             .collection("friends").document(friendUserId)
                             .set(newFriend)
