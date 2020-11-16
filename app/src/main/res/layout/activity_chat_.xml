@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context=".Chat_Activity">
 
     <Button
         android:id="@+id/log_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log out"
+        android:background="@drawable/small_button_background"
+        android:text="@string/log_out"
         android:onClick="logOutButtonPressed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,7 +21,8 @@
         android:id="@+id/btn_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile"
+        android:background="@drawable/small_button_background"
+        android:text="@string/profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -27,9 +30,10 @@
         android:id="@+id/button_add_friend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/small_button_background"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
-        android:text="add friend"
+        android:text="@string/add_friend"
         android:onClick="addFriendPressed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

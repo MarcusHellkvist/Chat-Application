@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+
     tools:context=".AddFriends">
 
     <EditText
@@ -11,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/search_button"
-        android:hint="Search New Friends"
+        android:hint="@string/search_new_friends"
         android:inputType="textPersonName" />
 
     <ImageButton
@@ -27,7 +29,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/search_edit_text"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        />
 
 
 </RelativeLayout>
