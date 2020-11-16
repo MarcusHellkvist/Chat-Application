@@ -1,0 +1,799 @@
+Index: app/src/main/java/com/example/chatapplication/ListOfMyFriends.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/ListOfMyFriends.java	(date 1605521419226)
++++ app/src/main/java/com/example/chatapplication/ListOfMyFriends.java	(date 1605521419226)
+@@ -0,0 +1,138 @@
++package com.example.chatapplication;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.recyclerview.widget.LinearLayoutManager;
++import androidx.recyclerview.widget.RecyclerView;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.util.Log;
++import android.view.View;
++import android.widget.Toast;
++
++import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.OnFailureListener;
++import com.google.android.gms.tasks.Task;
++import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.firestore.DocumentChange;
++import com.google.firebase.firestore.DocumentReference;
++import com.google.firebase.firestore.DocumentSnapshot;
++import com.google.firebase.firestore.EventListener;
++import com.google.firebase.firestore.FirebaseFirestore;
++import com.google.firebase.firestore.FirebaseFirestoreException;
++import com.google.firebase.firestore.QueryDocumentSnapshot;
++import com.google.firebase.firestore.QuerySnapshot;
++
++import java.util.ArrayList;
++
++public class ListOfMyFriends extends AppCompatActivity {
++
++    private RecyclerView friendsRecyclerView;
++    private MyFriendsAdapter myFriendsAdapter;
++    private RecyclerView.LayoutManager friendsManager;
++
++    private FirebaseAuth mAuth;
++    private FirebaseFirestore db;
++    private DocumentReference userReference;
++
++    private String idUFriend;
++    private String currentUserId;
++    private User user;
++
++    private ArrayList<User> myFriendsList = new ArrayList<>();
++
++    private ArrayList<String> friendListId = new ArrayList<>();
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_list_of_my_friends);
++
++        //FIREBASE INIT
++        mAuth = FirebaseAuth.getInstance();
++        db = FirebaseFirestore.getInstance();
++        currentUserId = mAuth.getCurrentUser().getUid();
++
++        friendsRecyclerView = findViewById(R.id.list_of_my_friends_RecyclerView);
++        friendsRecyclerView.setHasFixedSize(true);
++        myFriendsAdapter = new MyFriendsAdapter(myFriendsList);
++        friendsManager = new LinearLayoutManager(this);
++        friendsRecyclerView.setLayoutManager(friendsManager);
++        friendsRecyclerView.setAdapter(myFriendsAdapter);
++
++        myFriendsAdapter.setFriendOnItemClickListener(new MyFriendsAdapter.OnItemClickListener() {
++            @Override
++            public void OnItemClicked(int position, View view) {
++                User myFriends = myFriendsList.get(position);
++                chatIntent();
++            }
++        });
++
++        getFriendList();
++
++    }
++
++    // SHOW LIST OF FRIENDS
++    private void showFriendList() {
++        db.collection("users")
++                .get()
++                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
++                    @Override
++                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
++                        if (task.isSuccessful()) {
++                            for (QueryDocumentSnapshot document : task.getResult()) {
++                                String documentId = document.getId();
++                                for (int i = 0; i < friendListId.size(); i++) {
++                                    if (friendListId.get(i).contentEquals(documentId)) {
++                                        // LÄGG TILL I FRIENDS ADAPTER
++                                        user = document.toObject(User.class);
++                                        myFriendsList.add(user);
++                                    }
++                                }
++                            }
++                            myFriendsAdapter.notifyDataSetChanged();
++                        }
++                    }
++                })
++                .addOnFailureListener(new OnFailureListener() {
++                    @Override
++                    public void onFailure(@NonNull Exception e) {
++                        Toast.makeText(ListOfMyFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
++                    }
++                });
++    }
++
++    // GET LIST OF FRIENDS
++    private void getFriendList() {
++        db.collection("users")
++                .document(currentUserId)
++                .collection("friends")
++                .get()
++                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
++                    @Override
++                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
++                        if (task.isSuccessful()) {
++                            for (QueryDocumentSnapshot document : task.getResult()) {
++                                String friendId = document.getId();
++                                friendListId.add(friendId);
++                            }
++                            showFriendList();
++                        }
++                    }
++                })
++                .addOnFailureListener(new OnFailureListener() {
++                    @Override
++                    public void onFailure(@NonNull Exception e) {
++                        Toast.makeText(ListOfMyFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
++                    }
++                });
++    }
++
++
++    public void chatIntent() {
++        startActivity(new Intent(this, Chat_Activity.class));
++    }
++
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/chatapplication/MyFriendsAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/MyFriendsAdapter.java	(date 1605521419228)
++++ app/src/main/java/com/example/chatapplication/MyFriendsAdapter.java	(date 1605521419228)
+@@ -0,0 +1,77 @@
++package com.example.chatapplication;
++
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ImageView;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.RecyclerView;
++
++import java.util.ArrayList;
++
++public class MyFriendsAdapter extends RecyclerView.Adapter<MyFriendsAdapter.FriendsViewHolder> {
++
++    private ArrayList<User> friendsList;
++
++    interface OnItemClickListener {
++        void OnItemClicked(int position, View view);
++    }
++
++    public OnItemClickListener friendOnItemClickListener;
++
++    public void setFriendOnItemClickListener(OnItemClickListener friendOnItemClickListener) {
++        this.friendOnItemClickListener = friendOnItemClickListener;
++    }
++
++    @NonNull
++    @Override
++    public MyFriendsAdapter.FriendsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.myfriends, parent, false);
++        MyFriendsAdapter.FriendsViewHolder FriendsViewHolder = new MyFriendsAdapter.FriendsViewHolder(view, friendOnItemClickListener);
++        return FriendsViewHolder;
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull FriendsViewHolder holder, int position) {
++        User item = friendsList.get(position);
++        holder.myFriendsName.setText(item.getName());
++    }
++
++    @Override
++    public int getItemCount() {
++        return friendsList.size();
++    }
++
++    public MyFriendsAdapter(ArrayList<User> friendsList) {
++        this.friendsList = friendsList;
++        notifyDataSetChanged();
++    }
++
++    public static class FriendsViewHolder extends RecyclerView.ViewHolder {
++
++        public ImageView myFriendImage;
++        public TextView myFriendsName;
++        public TextView myFriendMessage;
++
++        public FriendsViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
++            super(itemView);
++            myFriendImage = itemView.findViewById(R.id.my_friend_imageView);
++            myFriendsName = itemView.findViewById(R.id.my_friend_name);
++            myFriendMessage = itemView.findViewById(R.id.my_friend_last_message);
++
++            itemView.setOnClickListener(new View.OnClickListener() {
++                @Override
++                public void onClick(View v) {
++                    int position = getAdapterPosition();
++                    if (listener != null) {
++                        if (position != RecyclerView.NO_POSITION) {
++                            listener.OnItemClicked(position, v);
++                        }
++                    }
++                }
++            });
++        }
++    }
++}
+Index: app/src/main/java/com/example/chatapplication/Chat_Activity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.chatapplication;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\n\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n\r\npublic class Chat_Activity extends AppCompatActivity {\r\n\r\n    private Button btnProfile;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_chat_);\r\n\r\n        //BUTTON VIEWS\r\n        btnProfile = findViewById(R.id.btn_profile);\r\n        btnProfile.setOnClickListener(goToProfileListener);\r\n\r\n    }\r\n\r\n    public void logOutButtonPressed(View view) {\r\n        FirebaseAuth.getInstance().signOut();\r\n        Intent intent = new Intent(this, MainActivity.class);\r\n        startActivity(intent);\r\n    }\r\n\r\n    private View.OnClickListener goToProfileListener = new View.OnClickListener() {\r\n        @Override\r\n        public void onClick(View v) {\r\n            startActivity(new Intent(Chat_Activity.this, ProfileActivity.class));\r\n        }\r\n    };\r\n\r\n    public void addFriendPressed(View view) {\r\n        startActivity(new Intent(this,AddFriends.class));\r\n\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/Chat_Activity.java	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/java/com/example/chatapplication/Chat_Activity.java	(date 1605521419225)
+@@ -12,6 +12,7 @@
+ public class Chat_Activity extends AppCompatActivity {
+ 
+     private Button btnProfile;
++    private Button btnMyFriends;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+@@ -20,7 +21,9 @@
+ 
+         //BUTTON VIEWS
+         btnProfile = findViewById(R.id.btn_profile);
++        btnMyFriends = findViewById(R.id.btn_myfriends);
+         btnProfile.setOnClickListener(goToProfileListener);
++        btnMyFriends.setOnClickListener(goToMyFriendsListener);
+ 
+     }
+ 
+@@ -37,6 +40,13 @@
+         }
+     };
+ 
++    private View.OnClickListener goToMyFriendsListener = new View.OnClickListener() {
++        @Override
++        public void onClick(View v) {
++            startActivity(new Intent(Chat_Activity.this, ListOfMyFriends.class));
++        }
++    };
++
+     public void addFriendPressed(View view) {
+         startActivity(new Intent(this,AddFriends.class));
+ 
+Index: app/src/main/res/layout/myfriends.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/myfriends.xml	(date 1605521419245)
++++ app/src/main/res/layout/myfriends.xml	(date 1605521419245)
+@@ -0,0 +1,62 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:layout_margin="1dp"
++    android:backgroundTint="#2196F3"
++    app:cardCornerRadius="4dp">
++
++    <RelativeLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:layout_margin="8dp"
++        >
++
++        <ImageView
++            android:id="@+id/my_friend_imageView"
++            android:layout_width="50dp"
++            android:layout_height="50dp"
++            android:padding="2dp"
++            android:src="@drawable/person_icon" />
++
++        <TextView
++            android:id="@+id/my_friend_name"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="16dp"
++            android:layout_marginTop="2dp"
++            android:layout_toEndOf="@+id/my_friend_imageView"
++            android:layout_toRightOf="@+id/my_friend_imageView"
++            android:text="Friend Name"
++            android:textSize="20sp"
++            android:textStyle="bold" />
++
++        <TextView
++            android:id="@+id/my_friend_last_message"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_below="@+id/my_friend_name"
++            android:layout_marginLeft="16dp"
++            android:layout_toEndOf="@+id/my_friend_imageView"
++            android:layout_toRightOf="@+id/my_friend_imageView"
++            android:text="Last message or Mobile number "
++            android:textSize="14sp"
++            android:textStyle="normal" />
++
++        <ImageView
++            android:id="@+id/send_message_icon"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_alignParentEnd="true"
++            android:layout_alignParentRight="true"
++            android:layout_centerVertical="true"
++            android:layout_marginEnd="16dp"
++            android:layout_marginRight="16dp"
++            android:padding="8dp"
++            android:src="@drawable/send_icon" />
++
++
++    </RelativeLayout>
++
++</androidx.cardview.widget.CardView>
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_chat_.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:background=\"@color/colorBackground\"\r\n    tools:context=\".Chat_Activity\">\r\n\r\n    <Button\r\n        android:id=\"@+id/log_out\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"@drawable/small_button_background\"\r\n        android:text=\"@string/log_out\"\r\n        android:onClick=\"logOutButtonPressed\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/btn_profile\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"@drawable/small_button_background\"\r\n        android:text=\"@string/profile\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/button_add_friend\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"@drawable/small_button_background\"\r\n        android:layout_marginStart=\"8dp\"\r\n        android:layout_marginBottom=\"8dp\"\r\n        android:text=\"@string/add_friend\"\r\n        android:onClick=\"addFriendPressed\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\" />\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_chat_.xml	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/res/layout/activity_chat_.xml	(date 1605521419243)
+@@ -37,4 +37,12 @@
+         android:onClick="addFriendPressed"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintStart_toStartOf="parent" />
++
++    <Button
++        android:id="@+id/btn_myfriends"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="My Friends"
++        app:layout_constraintBottom_toBottomOf="@+id/button_add_friend"
++        app:layout_constraintStart_toEndOf="@+id/button_add_friend" />
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/res/drawable/send_icon.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/send_icon.xml	(date 1605521419241)
++++ app/src/main/res/drawable/send_icon.xml	(date 1605521419241)
+@@ -0,0 +1,11 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24"
++    android:tint="?attr/colorControlNormal"
++    android:autoMirrored="true">
++  <path
++      android:fillColor="@android:color/white"
++      android:pathData="M2.01,21L23,12 2.01,3 2,10l15,2 -15,2z"/>
++</vector>
+Index: app/src/main/java/com/example/chatapplication/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.chatapplication;\r\n\r\npublic class User {\r\n    private String name;\r\n    private String phoneNumber;\r\n    private String email;\r\n    private String idFirebase;\r\n    private String address;\r\n\r\n\r\n    public User(String name, String phoneNumber, String email, String idFirebase,String address) {\r\n        this.name = name;\r\n        this.phoneNumber = phoneNumber;\r\n        this.email = email;\r\n        this.idFirebase = idFirebase;\r\n        this.address = address;\r\n    }\r\n\r\n    public User(String name, String email, String idFirebase) {\r\n        this.name = name;\r\n        this.email = email;\r\n        this.idFirebase = idFirebase;\r\n    }\r\n\r\n    public User() {\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n\r\n    public void setName(String name) {\r\n        this.name = name;\r\n    }\r\n\r\n    public String getPhoneNumber() {\r\n        return phoneNumber;\r\n    }\r\n\r\n    public void setPhoneNumber(String phoneNumber) {\r\n        this.phoneNumber = phoneNumber;\r\n    }\r\n\r\n    public String getEmail() {\r\n        return email;\r\n    }\r\n\r\n    public void setEmail(String email) {\r\n        this.email = email;\r\n    }\r\n\r\n    public String getIdFirebase() {\r\n        return idFirebase;\r\n    }\r\n\r\n    public void setIdFirebase(String idFirebase) {\r\n        this.idFirebase = idFirebase;\r\n    }\r\n\r\n    public String getAddress() {\r\n        return address;\r\n    }\r\n\r\n    public void setAddress(String address) {\r\n        this.address = address;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/User.java	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/java/com/example/chatapplication/User.java	(date 1605523417368)
+@@ -22,6 +22,7 @@
+         this.idFirebase = idFirebase;
+     }
+ 
++
+     public User() {
+     }
+ 
+Index: app/src/main/java/com/example/chatapplication/SingUp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.chatapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\n\r\npublic class    SingUp extends AppCompatActivity {\r\n\r\n    private FirebaseAuth mAuth;\r\n    private FirebaseFirestore db;\r\n\r\n\r\n\r\n    private EditText email;\r\n    private EditText pass;\r\n    private EditText confrimPassword;\r\n    private EditText name;\r\n    //private EditText userNumber;\r\n    private String idFirebase;\r\n\r\n\r\n    @SuppressLint(\"WrongViewCast\")\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_sing_up);\r\n\r\n        email = findViewById(R.id.user_email_editText);\r\n        pass = findViewById(R.id.user_pass_editText);\r\n        confrimPassword = findViewById(R.id.user_confirm_pass_editText);\r\n        name = findViewById(R.id.search_user_name);\r\n        //userNumber = findViewById(R.id.user_telNumber);\r\n        db = FirebaseFirestore.getInstance();\r\n\r\n\r\n        mAuth = FirebaseAuth.getInstance();\r\n\r\n\r\n    }\r\n\r\n    public void singUpButtonPressed(View view) {\r\n        final String userEmail = email.getText().toString().trim();\r\n        final String userPass = pass.getText().toString().trim();\r\n        final String confirmedPass = confrimPassword.getText().toString().trim();\r\n        final String userName = name.getText().toString().trim().toLowerCase();\r\n        //final String userTelNumber = userNumber.getText().toString().trim();\r\n\r\n        //Added an if statement to make sure the password is entered correctly. /JR\r\n        if (userPass.equals(confirmedPass)) {\r\n            mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\r\n                @Override\r\n                public void onComplete(@NonNull Task<AuthResult> task) {\r\n\r\n                    if (task.isSuccessful()) {\r\n                        //get user id from Firebase\r\n                        idFirebase = mAuth.getCurrentUser().getUid();\r\n                        User user = new User(userName, userEmail, idFirebase);\r\n                        db.collection(\"users\").document(idFirebase).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {\r\n                            @Override\r\n                            public void onSuccess(Void aVoid) {\r\n                                Intent intent = new Intent(SingUp.this, Chat_Activity.class);\r\n                                startActivity(intent);\r\n                                Log.d(\"Jenny\", \"Ny använade skall vara skapad\");\r\n                            }\r\n                        });\r\n                        // FirebaseUser user = mAuth.getCurrentUser();\r\n                        Toast.makeText(SingUp.this, \"user done log in \", Toast.LENGTH_SHORT).show();\r\n\r\n                    } else {\r\n\r\n                        Toast.makeText(SingUp.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();\r\n                    }\r\n\r\n                }\r\n\r\n\r\n            });\r\n        } else {\r\n            Toast.makeText(SingUp.this, \"Passwords don't match, pls try again\", Toast.LENGTH_LONG).show();\r\n        }\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/SingUp.java	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/java/com/example/chatapplication/SingUp.java	(date 1605523607870)
+@@ -42,7 +42,7 @@
+         email = findViewById(R.id.user_email_editText);
+         pass = findViewById(R.id.user_pass_editText);
+         confrimPassword = findViewById(R.id.user_confirm_pass_editText);
+-        name = findViewById(R.id.search_user_name);
++        name = findViewById(R.id.user_name);
+         //userNumber = findViewById(R.id.user_telNumber);
+         db = FirebaseFirestore.getInstance();
+ 
+@@ -53,10 +53,10 @@
+     }
+ 
+     public void singUpButtonPressed(View view) {
+-        final String userEmail = email.getText().toString().trim();
++        final String userEmail = email.getText().toString().toLowerCase().trim();
+         final String userPass = pass.getText().toString().trim();
+         final String confirmedPass = confrimPassword.getText().toString().trim();
+-        final String userName = name.getText().toString().trim().toLowerCase();
++        final String userName = name.getText().toString().trim();
+         //final String userTelNumber = userNumber.getText().toString().trim();
+ 
+         //Added an if statement to make sure the password is entered correctly. /JR
+Index: app/src/main/res/layout/activity_list_of_my_friends.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_list_of_my_friends.xml	(date 1605521419244)
++++ app/src/main/res/layout/activity_list_of_my_friends.xml	(date 1605521419244)
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context=".ListOfMyFriends">
++
++    <androidx.recyclerview.widget.RecyclerView
++        android:id="@+id/list_of_my_friends_RecyclerView"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:scrollbars="vertical"/>
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/res/drawable/check_icon.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/check_icon.xml	(date 1605521419240)
++++ app/src/main/res/drawable/check_icon.xml	(date 1605521419240)
+@@ -0,0 +1,10 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:tint="?attr/colorControlNormal"
++    android:viewportWidth="50"
++    android:viewportHeight="50">
++    <path
++        android:fillColor="@android:color/white"
++        android:pathData="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41,-1.41z" />
++</vector>
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.example.chatapplication\">\r\n\r\n    <uses-feature\r\n        android:name=\"android.hardware.camera2\"\r\n        android:required=\"false\" />\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/AppTheme\">\r\n        <activity android:name=\".AddFriends\"></activity>\r\n        <activity android:name=\".ProfileActivity\" />\r\n        <activity android:name=\".Chat_Activity\" />\r\n        <activity android:name=\".SingUp\" />\r\n        <activity android:name=\".MainActivity\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/AndroidManifest.xml	(date 1605521419215)
+@@ -13,7 +13,8 @@
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:theme="@style/AppTheme">
+-        <activity android:name=".AddFriends"></activity>
++        <activity android:name=".ListOfMyFriends"></activity>
++        <activity android:name=".AddFriends" />
+         <activity android:name=".ProfileActivity" />
+         <activity android:name=".Chat_Activity" />
+         <activity android:name=".SingUp" />
+Index: app/src/main/java/com/example/chatapplication/SearchAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.chatapplication;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {\r\n\r\n    private ArrayList<User> searchUser;\r\n\r\n    @NonNull\r\n    @Override\r\n    public SearchAdapter.SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        View view =\r\n                LayoutInflater.from(parent.getContext()).inflate(R.layout.search_friends_list, parent, false);\r\n        SearchAdapter.SearchViewHolder searchViewHolder = new SearchAdapter.SearchViewHolder(view, searchOnItemClickListener);\r\n        return searchViewHolder;\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull SearchAdapter.SearchViewHolder holder, int position) {\r\n        User currentItem = searchUser.get(position);\r\n        holder.searchUsername.setText(currentItem.getName());\r\n\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return searchUser.size();\r\n    }\r\n\r\n    public static class SearchViewHolder extends RecyclerView.ViewHolder {\r\n\r\n        public ImageView searchUserImage;\r\n        public TextView searchUsername;\r\n        public ImageView searchAddIcon;\r\n\r\n\r\n        public SearchViewHolder(@NonNull View itemView, final SearchAdapter.OnItemClickListener listener) {\r\n            super(itemView);\r\n            searchUserImage = itemView.findViewById(R.id.search_user_image);\r\n            searchUsername = itemView.findViewById(R.id.search_user_name);\r\n            searchAddIcon = itemView.findViewById(R.id.search_add_icon);\r\n\r\n            itemView.setOnClickListener(new View.OnClickListener() {\r\n                @Override\r\n                public void onClick(View v) {\r\n                    int position = getAdapterPosition();\r\n                    if (listener != null) {\r\n                        if (position != RecyclerView.NO_POSITION) {\r\n                            listener.OnItemClicked(position, v);\r\n                        }\r\n                    }\r\n                }\r\n            });\r\n        }\r\n    }\r\n\r\n    public SearchAdapter(ArrayList<User> searchUser) {\r\n        this.searchUser = searchUser;\r\n        notifyDataSetChanged();\r\n    }\r\n\r\n    interface OnItemClickListener{\r\n        void OnItemClicked(int position, View view);\r\n    }\r\n\r\n    private OnItemClickListener searchOnItemClickListener;\r\n\r\n    public void setSearchOnItemClickListener(OnItemClickListener searchOnItemClickListener){\r\n        this.searchOnItemClickListener = searchOnItemClickListener;\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/SearchAdapter.java	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/java/com/example/chatapplication/SearchAdapter.java	(date 1605521419238)
+@@ -18,8 +18,7 @@
+     @NonNull
+     @Override
+     public SearchAdapter.SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+-        View view =
+-                LayoutInflater.from(parent.getContext()).inflate(R.layout.search_friends_list, parent, false);
++        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_friends_list, parent, false);
+         SearchAdapter.SearchViewHolder searchViewHolder = new SearchAdapter.SearchViewHolder(view, searchOnItemClickListener);
+         return searchViewHolder;
+     }
+@@ -60,21 +59,34 @@
+                     }
+                 }
+             });
++            searchAddIcon.setOnClickListener(new View.OnClickListener() {
++                @Override
++                public void onClick(View v) {
++                    int position = getAdapterPosition();
++                    if (listener != null) {
++                        if (position != RecyclerView.NO_POSITION) {
++                            listener.OnAddIconClicked(position, v);
++                        }
++                    }
++                }
++            });
+         }
+     }
++
+ 
+     public SearchAdapter(ArrayList<User> searchUser) {
+         this.searchUser = searchUser;
+         notifyDataSetChanged();
+     }
+ 
+-    interface OnItemClickListener{
++    interface OnItemClickListener {
+         void OnItemClicked(int position, View view);
++        void OnAddIconClicked(int position, View view);
+     }
+ 
+     private OnItemClickListener searchOnItemClickListener;
+ 
+-    public void setSearchOnItemClickListener(OnItemClickListener searchOnItemClickListener){
++    public void setSearchOnItemClickListener(OnItemClickListener searchOnItemClickListener) {
+         this.searchOnItemClickListener = searchOnItemClickListener;
+     }
+ 
+Index: app/src/main/res/layout/search_friends_list.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.cardview.widget.CardView xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:layout_margin=\"1dp\"\r\n    android:background=\"@color/colorBackground\"\r\n    app:cardCornerRadius=\"4dp\">\r\n\r\n    <RelativeLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:layout_margin=\"6dp\">\r\n\r\n        <ImageView\r\n            android:id=\"@+id/search_user_image\"\r\n            android:layout_width=\"50dp\"\r\n            android:layout_height=\"50dp\"\r\n            android:padding=\"2dp\"\r\n            android:src=\"@drawable/person_icon\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/search_user_name\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_centerVertical=\"true\"\r\n            android:layout_marginStart=\"16dp\"\r\n            android:layout_toEndOf=\"@+id/search_user_image\"\r\n            android:layout_toRightOf=\"@+id/search_user_image\"\r\n            android:text=\"@string/friend_name\"\r\n            android:textSize=\"20sp\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <ImageView\r\n            android:id=\"@+id/search_add_icon\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_alignParentEnd=\"true\"\r\n            android:layout_alignParentRight=\"true\"\r\n            android:layout_centerVertical=\"true\"\r\n            android:layout_marginEnd=\"16dp\"\r\n            android:layout_marginRight=\"16dp\"\r\n            android:padding=\"8dp\"\r\n            android:src=\"@drawable/add_icon\"\r\n            android:contentDescription=\"TODO\" />\r\n\r\n\r\n    </RelativeLayout>\r\n\r\n</androidx.cardview.widget.CardView>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/search_friends_list.xml	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/res/layout/search_friends_list.xml	(date 1605521419247)
+@@ -4,13 +4,17 @@
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_margin="1dp"
++
++    android:backgroundTint="#2196F3"
++
+     android:background="@color/colorBackground"
++
+     app:cardCornerRadius="4dp">
+ 
+     <RelativeLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+-        android:layout_margin="6dp">
++        android:layout_margin="8dp">
+ 
+         <ImageView
+             android:id="@+id/search_user_image"
+Index: app/src/main/java/com/example/chatapplication/AddFriends.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.chatapplication;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.QueryDocumentSnapshot;\r\nimport com.google.firebase.firestore.QuerySnapshot;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class AddFriends extends AppCompatActivity {\r\n\r\n    private EditText searchEditText;\r\n\r\n    private RecyclerView searchRecyclerView;\r\n    private SearchAdapter searchAdapter;\r\n    private RecyclerView.LayoutManager searchManager;\r\n\r\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\r\n    private FirebaseFirestore db = FirebaseFirestore.getInstance();\r\n    private DocumentReference userReference;\r\n\r\n    private String idUFriend;\r\n\r\n    private ArrayList<User> searchUser = new ArrayList<>();\r\n\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_add_friends);\r\n\r\n        searchRecyclerView = findViewById(R.id.search_RecyclerView);\r\n        searchEditText = findViewById(R.id.search_edit_text);\r\n\r\n        searchRecyclerView = findViewById(R.id.search_RecyclerView);\r\n        searchRecyclerView.setHasFixedSize(true);\r\n        searchAdapter = new SearchAdapter(searchUser);\r\n        searchManager = new LinearLayoutManager(this);\r\n        searchRecyclerView.setLayoutManager(searchManager);\r\n        searchRecyclerView.setAdapter(searchAdapter);\r\n\r\n        searchAdapter.setSearchOnItemClickListener(new SearchAdapter.OnItemClickListener() {\r\n            @Override\r\n            public void OnItemClicked(int position, View view) {\r\n                User newFriend = searchUser.get(position);\r\n            }\r\n        });\r\n\r\n    }\r\n\r\n    public void searchPressed(View view) {\r\n        searchUser.clear();\r\n        String searchText = searchEditText.getText().toString().toLowerCase().trim();\r\n        if (searchText.isEmpty()) {\r\n            searchUser.clear();\r\n        } else {\r\n            db.collection(\"users\")\r\n                    .whereEqualTo(\"name\", searchText)\r\n                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {\r\n                @Override\r\n                public void onComplete(@NonNull Task<QuerySnapshot> task) {\r\n                    if (task.isSuccessful()) {\r\n                        for (QueryDocumentSnapshot document : task.getResult()) {\r\n                            String friendName = document.getString(\"name\");\r\n                            String friendEmail = document.getString(\"email\");\r\n                            idUFriend = document.getId();\r\n                            //if (idUFriend == null) return;\r\n                            checkIfAlreadyFriend();\r\n                            searchUser.add(new User(friendName, friendEmail, idUFriend));\r\n                            searchAdapter.notifyDataSetChanged();\r\n                        }\r\n                    } else {\r\n                        Toast.makeText(AddFriends.this, task.getException().getLocalizedMessage(),\r\n                                Toast.LENGTH_SHORT).show();\r\n                    }\r\n                }\r\n\r\n            });\r\n        }\r\n        searchAdapter.notifyDataSetChanged();\r\n    }\r\n\r\n    public void checkIfAlreadyFriend() {\r\n        String idFirebase = mAuth.getCurrentUser().getUid();\r\n        db.collection(\"users\").document(idFirebase).collection(\"friends\")\r\n                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {\r\n            @Override\r\n            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {\r\n                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {\r\n                    String idFriend = document.getString(\"idFirebase\");\r\n                    if (idFriend.equals(idFriend)) return;\r\n                }\r\n            }\r\n        });\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/AddFriends.java	(revision 5d63b16e088a90a995b32d0358b6fb3f1a59f433)
++++ app/src/main/java/com/example/chatapplication/AddFriends.java	(date 1605521419223)
+@@ -1,25 +1,32 @@
+ package com.example.chatapplication;
+ 
+-import androidx.annotation.NonNull;
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.recyclerview.widget.LinearLayoutManager;
+-import androidx.recyclerview.widget.RecyclerView;
+-
++import android.content.Intent;
+ import android.os.Bundle;
++import android.util.Log;
+ import android.view.View;
+ import android.widget.EditText;
+ import android.widget.Toast;
+ 
++import androidx.annotation.NonNull;
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.recyclerview.widget.LinearLayoutManager;
++import androidx.recyclerview.widget.RecyclerView;
++
+ import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.OnFailureListener;
+ import com.google.android.gms.tasks.OnSuccessListener;
+ import com.google.android.gms.tasks.Task;
+ import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.firestore.CollectionReference;
+ import com.google.firebase.firestore.DocumentReference;
+ import com.google.firebase.firestore.FirebaseFirestore;
++import com.google.firebase.firestore.Query;
+ import com.google.firebase.firestore.QueryDocumentSnapshot;
+ import com.google.firebase.firestore.QuerySnapshot;
+ 
+ import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.Map;
+ 
+ public class AddFriends extends AppCompatActivity {
+ 
+@@ -31,11 +38,16 @@
+ 
+     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+-    private DocumentReference userReference;
+ 
+-    private String idUFriend;
++    private String idFirebase;
++    private User user;
++
++    private final CollectionReference usersCollectionRef = db.collection("users");
++    private DocumentReference documentReference;
++    private CollectionReference friendsCollectionRef;
+ 
+     private ArrayList<User> searchUser = new ArrayList<>();
++    private ArrayList<String> friendListIds = new ArrayList<>();
+ 
+ 
+     @Override
+@@ -43,6 +55,13 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_add_friends);
+ 
++
++        idFirebase = mAuth.getCurrentUser().getUid();
++
++        friendsCollectionRef = db.collection("users").document(idFirebase)
++                .collection("friends");
++
++
+         searchRecyclerView = findViewById(R.id.search_RecyclerView);
+         searchEditText = findViewById(R.id.search_edit_text);
+ 
+@@ -57,55 +76,96 @@
+             @Override
+             public void OnItemClicked(int position, View view) {
+                 User newFriend = searchUser.get(position);
++                profileIntent();
+             }
+-        });
++
++            // ADD FRIENDS ID TO CURRENT USER FRIENDS COLLECTIONS
++            @Override
++            public void OnAddIconClicked(int position, View view) {
++
++                final String friendUserId = searchUser.get(position).getIdFirebase();
++                Map<String, Object> newFriend = new HashMap<>();
++                newFriend.put("uID", friendUserId);
++
++                final Map<String, Object> newIdFirebase = new HashMap<>();
++                newIdFirebase.put("uID", idFirebase);
++
++
++
++                if (idFirebase.equals(friendUserId)) {
++                    Toast.makeText(AddFriends.this, "can't be friend", Toast.LENGTH_SHORT).show();
++                } else {
++                    //view.setBackgroundResource(R.drawable.check_icon);
++                    db.collection("users").document(idFirebase)
++                            .collection("friends").document(friendUserId)
++                            .set(newFriend)
++                            .addOnSuccessListener(new OnSuccessListener<Void>() {
++                                @Override
++                                public void onSuccess(Void aVoid) {
++                                    Toast.makeText(AddFriends.this, "new friend added.", Toast.LENGTH_SHORT).show();
++                                    db.collection("users").document(friendUserId)
++                                            .collection("friends").document(idFirebase)
++                                            .set(newIdFirebase);
++
++                                }
++                            })
++                            .addOnFailureListener(new OnFailureListener() {
++                                @Override
++                                public void onFailure(@NonNull Exception e) {
++                                    Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
++                                }
++                            });
++                }
+ 
++            }
++        });
+     }
+ 
++
++    // SEARCH FOR FRIENDS
+     public void searchPressed(View view) {
+         searchUser.clear();
+-        String searchText = searchEditText.getText().toString().toLowerCase().trim();
+-        if (searchText.isEmpty()) {
+-            searchUser.clear();
+-        } else {
+-            db.collection("users")
+-                    .whereEqualTo("name", searchText)
+-                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+-                @Override
+-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+-                    if (task.isSuccessful()) {
+-                        for (QueryDocumentSnapshot document : task.getResult()) {
+-                            String friendName = document.getString("name");
+-                            String friendEmail = document.getString("email");
+-                            idUFriend = document.getId();
+-                            //if (idUFriend == null) return;
+-                            checkIfAlreadyFriend();
+-                            searchUser.add(new User(friendName, friendEmail, idUFriend));
+-                            searchAdapter.notifyDataSetChanged();
+-                        }
+-                    } else {
+-                        Toast.makeText(AddFriends.this, task.getException().getLocalizedMessage(),
+-                                Toast.LENGTH_SHORT).show();
+-                    }
+-                }
+-
+-            });
+-        }
+-        searchAdapter.notifyDataSetChanged();
+-    }
+-
+-    public void checkIfAlreadyFriend() {
+-        String idFirebase = mAuth.getCurrentUser().getUid();
+-        db.collection("users").document(idFirebase).collection("friends")
+-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+-            @Override
+-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+-                    String idFriend = document.getString("idFirebase");
+-                    if (idFriend.equals(idFriend)) return;
+-                }
+-            }
+-        });
++
++        Toast.makeText(this, "search button pressed.", Toast.LENGTH_SHORT).show();
++        String searchPhoneNumber = searchEditText.getText().toString().trim();
++
++        db.collection("users")
++                .whereEqualTo("phoneNumber", searchPhoneNumber)
++                .get()
++                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
++                    @Override
++                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
++                        if (task.isSuccessful()) {
++                            for (QueryDocumentSnapshot document : task.getResult()) {
++                                user = document.toObject(User.class);
++                                searchUser.add(user);
++                            }
++                            searchAdapter.notifyDataSetChanged();
++                        }
++                    }
++                })
++                .addOnFailureListener(new OnFailureListener() {
++                    @Override
++                    public void onFailure(@NonNull Exception e) {
++                        Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
++                    }
++                });
++
++
++    }
++
++
++    public void chatIntent() {
++        startActivity(new Intent(this, Chat_Activity.class));
++    }
++
++    public void friendIntent() {
++        startActivity(new Intent(this, ListOfMyFriends.class));
++    }
+ 
++    public void profileIntent() {
++        startActivity(new Intent(this, ProfileActivity.class));
+     }
++
++
+ }

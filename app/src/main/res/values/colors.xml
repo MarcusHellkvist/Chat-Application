@@ -6,4 +6,5 @@
     <color name="colorText">#FFFFFF</color>
     <color name="colorButton">#C391B6</color>
     <color name="colorBackground">#f8d3bc</color>
+    <color name="colorEditTextFields">#7C7777</color>
 </resources>

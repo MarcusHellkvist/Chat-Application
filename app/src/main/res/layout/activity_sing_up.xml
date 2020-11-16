@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    tools:context=".SingUp">
+    android:layout_width="match_parent">
 
-
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="75dp"
+        android:background="@color/colorBackground"
+        tools:context=".SingUp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
 
-    <ImageView
+        <ImageView
             android:id="@+id/iv_profile_picture_sign_up"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginTop="64dp"
+            android:background="@color/colorButton"
             android:clickable="true"
             android:focusable="true"
-            android:background="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +35,7 @@
             android:hint="@string/e_mail"
             android:inputType="textEmailAddress"
             android:textAlignment="center"
-            android:textColor="#7C7777"
+            android:textColor="@color/colorEditTextFields"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
@@ -55,7 +51,7 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:textAlignment="center"
-            android:textColor="#7C7777"
+            android:textColor="@color/colorEditTextFields"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,15 +66,15 @@
             android:hint="@string/confirm_password"
             android:inputType="textPassword"
             android:textAlignment="center"
-            android:textColor="#7C7777"
+            android:textColor="@color/colorEditTextFields"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/search_user_name"
+            app:layout_constraintBottom_toTopOf="@+id/user_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_pass_editText" />
 
         <EditText
-            android:id="@+id/search_user_name"
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -87,7 +83,7 @@
             android:inputType="textPersonName"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="#7C7777"
+            android:textColor="@color/colorEditTextFields"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,6 +105,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_user_name" />
+            app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
