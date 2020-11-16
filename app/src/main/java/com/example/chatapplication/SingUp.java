@@ -60,31 +60,31 @@ public class    SingUp extends AppCompatActivity {
                     final String userName = name.getText().toString().trim().toLowerCase();
                     //final String userTelNumber = userNumber.getText().toString().trim();
 
-                    //Added an if statement to make sure the password is entered correctly. /JR
-                    if (userPass.equals(confirmedPass)) {
-                        mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        //Added an if statement to make sure the password is entered correctly. /JR
+        if (userPass.equals(confirmedPass)) {
+            mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    if (task.isSuccessful()) {
+                        //get user id from Firebase
+                        idFirebase = mAuth.getCurrentUser().getUid();
+                        User user = new User(userName, userEmail, idFirebase);
+                        db.collection("users").document(idFirebase).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                            public void onSuccess(Void aVoid) {
+                                Intent intent = new Intent(SingUp.this, Chat_Activity.class);
+                                startActivity(intent);
+                                Log.d("Jenny", "Ny använade skall vara skapad");
+                            }
+                        });
+                        // FirebaseUser user = mAuth.getCurrentUser();
+                        Toast.makeText(SingUp.this, "user done log in ", Toast.LENGTH_SHORT).show();
 
-                                if (task.isSuccessful()) {
-                                    //get user id from Firebase
-                                    idFirebase = mAuth.getCurrentUser().getUid();
-                                    User user = new User(userName, userEmail, idFirebase);
-                                    db.collection("users").document(idFirebase).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Intent intent = new Intent(SingUp.this, Chat_Activity.class);
-                                            startActivity(intent);
-                                            Log.d("Jenny", "Ny använade skall vara skapad");
-                                        }
-                                    });
-                                    // FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(SingUp.this, "user done log in ", Toast.LENGTH_SHORT).show();
+                    } else {
 
-                                } else {
-
-                                    Toast.makeText(SingUp.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                        Toast.makeText(SingUp.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
 
 
                             }
