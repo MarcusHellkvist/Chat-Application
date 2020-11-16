@@ -30,9 +30,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity implements ProfileDialog.ProfileDialogListener {
 
@@ -44,12 +49,13 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
     private StorageReference storageReference;
 
     private ImageView ivProfilePicture;
-    private TextView tvIdNumber, tvUsername, tvEmail, tvPhone, tvAddress, tvAmountFriends;
+    private TextView tvIdNumber, tvUsername, tvEmail, tvPhone, tvAmountFriends;
     private Button btnEditProfile;
 
     private User user;
     private String currentUserId;
     private Uri imageUri;
+    private int friendAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +80,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         tvUsername = findViewById(R.id.tv_username);
         tvEmail = findViewById(R.id.tv_email);
         tvPhone = findViewById(R.id.tv_phone);
-        tvAddress = findViewById(R.id.tv_address);
         tvAmountFriends = findViewById(R.id.tv_amount_friends);
         
         //BUTTON VIEWS
@@ -82,12 +87,14 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         btnEditProfile.setOnClickListener(editListener);
 
         getUserData();
+        getProfilePicture();
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        // REAL-TIME FOR USER INFO
         usersRef.document(currentUserId)
                 .addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
                     @Override
@@ -98,6 +105,20 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                             tvUsername.setText(name);
                             tvPhone.setText(phone);
                         }
+                    }
+                });
+        //REAL-TIME FOR AMOUNT OF FRIENDS
+        usersRef.document(currentUserId)
+                .collection("friends")
+                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        List<String> friends = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : value){
+                            friends.add(document.getId());
+                        }
+                        friendAmount = friends.size();
+                        tvAmountFriends.setText(friendAmount + "");
                     }
                 });
     }
@@ -163,22 +184,17 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         String username = user.getName();
         String email = user.getEmail();
         String phone = user.getPhoneNumber();
-        String address = "SKÖVDE, SWEDEN";
-        String amountOfFriends = "246";
 
         tvIdNumber.setText(idNumber);
         tvUsername.setText(username);
         tvEmail.setText(email);
         tvPhone.setText(phone);
-        tvAddress.setText(address);
-        tvAmountFriends.setText(amountOfFriends);
     }
 
     private void openDialog(){
         ProfileDialog profileDialog = new ProfileDialog(user);
         profileDialog.show(getSupportFragmentManager(), "profile dialog");
     }
-
 
     private void getUserData() {
         String currentUserId = mAuth.getCurrentUser().getUid();
@@ -193,7 +209,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                                 Log.d("TAG", "onComplete: " + document.getData());
                                 user = document.toObject(User.class);
                                 setUserData();
-                                getProfilePicture();
                             } else {
                                 Log.d("TAG", "onComplete: No such data!");
                             }

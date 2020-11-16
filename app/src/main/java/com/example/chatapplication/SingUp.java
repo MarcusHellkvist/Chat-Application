@@ -18,7 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class    SingUp extends AppCompatActivity {
+public class SingUp extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -46,9 +46,7 @@ public class    SingUp extends AppCompatActivity {
         //userNumber = findViewById(R.id.user_telNumber);
         db = FirebaseFirestore.getInstance();
 
-
         mAuth = FirebaseAuth.getInstance();
-
 
     }
 

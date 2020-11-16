@@ -151,8 +151,6 @@ public class AddFriends extends AppCompatActivity {
                         Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
     }
 
 
