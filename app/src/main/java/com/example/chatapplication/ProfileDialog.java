@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,9 +20,9 @@ public class ProfileDialog extends AppCompatDialogFragment {
     private ProfileDialogListener listener;
     private User user;
 
-    public ProfileDialog(User user){
+    /*public ProfileDialog(User user){
         this.user = user;
-    }
+    }*/
 
 
     @NonNull
@@ -50,8 +51,9 @@ public class ProfileDialog extends AppCompatDialogFragment {
 
         etDialogProfileName = v.findViewById(R.id.et_dialog_profile_name);
         etDialogProfilePhone = v.findViewById(R.id.et_dialog_profile_phone);
+        /*
         etDialogProfileName.setText(user.getName());
-        etDialogProfilePhone.setText(user.getPhoneNumber());
+        etDialogProfilePhone.setText(user.getPhoneNumber());*/
         return builder.create();
 
     }

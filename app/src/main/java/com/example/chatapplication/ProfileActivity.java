@@ -49,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
     private StorageReference storageReference;
 
     private ImageView ivProfilePicture;
-    private TextView tvIdNumber, tvUsername, tvEmail, tvPhone, tvAmountFriends;
+    private TextView tvUsername, tvEmail, tvPhone, tvAmountFriends;
     private Button btnEditProfile;
 
     private User user;
@@ -76,7 +76,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         ivProfilePicture.setOnClickListener(changePictureListener);
         
         // TEXT VIEWS
-        tvIdNumber = findViewById(R.id.tv_id_number);
         tvUsername = findViewById(R.id.tv_username);
         tvEmail = findViewById(R.id.tv_email);
         tvPhone = findViewById(R.id.tv_phone);
@@ -86,7 +85,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         btnEditProfile = findViewById(R.id.btn_edit_profile);
         btnEditProfile.setOnClickListener(editListener);
 
-        getUserData();
+        // TODO MOVE ALL CODE TO onStart();
+        //getUserData();
         getProfilePicture();
 
     }
@@ -121,6 +121,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                         tvAmountFriends.setText(friendAmount + "");
                     }
                 });
+
     }
 
     @Override
@@ -181,44 +182,9 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         startActivityForResult(intent, REQUEST_CHOOSE_PICTURE);
     }
 
-    private void setUserData() {
-        String idNumber = "#3391";
-        String username = user.getName();
-        String email = user.getEmail();
-        String phone = user.getPhoneNumber();
-
-        tvIdNumber.setText(idNumber);
-        tvUsername.setText(username);
-        tvEmail.setText(email);
-        tvPhone.setText(phone);
-    }
-
     private void openDialog(){
-        ProfileDialog profileDialog = new ProfileDialog(user);
+        ProfileDialog profileDialog = new ProfileDialog();
         profileDialog.show(getSupportFragmentManager(), "profile dialog");
-    }
-
-    private void getUserData() {
-        String currentUserId = mAuth.getCurrentUser().getUid();
-        usersRef.document(currentUserId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()){
-                                Log.d("TAG", "onComplete: " + document.getData());
-                                user = document.toObject(User.class);
-                                setUserData();
-                            } else {
-                                Log.d("TAG", "onComplete: No such data!");
-                            }
-                        } else {
-                            Log.d("TAG", "onComplete: get failed with ", task.getException());
-                        }
-                    }
-                });
     }
 
     private View.OnClickListener editListener = new View.OnClickListener() {
@@ -236,11 +202,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
     };
 
     @Override
-    public void updateUserInfo(String name, String phone) {
-
-        // Update User class.
-        user.setName(name);
-        user.setPhoneNumber(phone);
+    public void updateUserInfo(final String name, final String phone) {
 
         FirebaseUser fUser = mAuth.getCurrentUser();
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -255,7 +217,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                         if (task.isSuccessful()){
                             // update firestore
                             usersRef.document(currentUserId)
-                                    .set(user)
+                                    .update("name", name, "phoneNumber", phone)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {

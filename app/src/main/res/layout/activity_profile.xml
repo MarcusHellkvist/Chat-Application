@@ -19,29 +19,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_id_number"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="#3391"
-        app:layout_constraintStart_toStartOf="@+id/iv_profile_picture"
-        app:layout_constraintTop_toBottomOf="@+id/iv_profile_picture" />
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        app:layout_constraintEnd_toEndOf="@+id/iv_profile_picture"
+        app:layout_constraintTop_toTopOf="@+id/iv_profile_picture"
+        app:srcCompat="@drawable/ic_edit" />
 
     <TextView
         android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Marcus Hellkvist"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_id_number" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_profile_picture" />
 
     <TextView
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="mhell@gmail.com"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_username" />
@@ -51,6 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0725114141"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_email" />
@@ -61,6 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="246"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_phone" />
@@ -70,6 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/friends"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_amount_friends" />
