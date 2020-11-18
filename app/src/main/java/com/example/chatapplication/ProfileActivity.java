@@ -153,8 +153,10 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
     }
 
     private void getProfilePicture(){
+
         StorageReference imagesRef = storageReference.child("images/" + currentUserId);
         final long ONE_MEGABYTE = 1024 * 1024;
+
         imagesRef.getBytes(ONE_MEGABYTE)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
@@ -166,7 +168,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfileActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        ivProfilePicture.setImageResource(R.drawable.defaultavatar);
                     }
                 });
 
