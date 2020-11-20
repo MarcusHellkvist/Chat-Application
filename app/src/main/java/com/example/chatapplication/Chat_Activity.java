@@ -52,4 +52,8 @@ public class Chat_Activity extends AppCompatActivity {
 
     }
 
+    public void goToChstButtonPressed(View view) {
+        Intent intent = new Intent (this, Chat_messages.class);
+        startActivity(intent);
+    }
 }
