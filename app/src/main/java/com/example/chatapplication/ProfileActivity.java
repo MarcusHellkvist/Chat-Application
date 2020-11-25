@@ -2,8 +2,11 @@ package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -52,10 +55,13 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
     private TextView tvUsername, tvEmail, tvPhone, tvAmountFriends;
     private Button btnEditProfile;
 
-    private User user;
     private String currentUserId;
     private Uri imageUri;
     private int friendAmount;
+
+    private Toolbar myToolbarProfile;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +75,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         currentUserId = mAuth.getCurrentUser().getUid();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
 
         // IMAGE VIEWS
         ivProfilePicture = findViewById(R.id.iv_profile_picture);
@@ -85,9 +90,15 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         btnEditProfile = findViewById(R.id.btn_edit_profile);
         btnEditProfile.setOnClickListener(editListener);
 
-        // TODO MOVE ALL CODE TO onStart();
-        //getUserData();
+        //TOOLBAR
+        myToolbarProfile = findViewById(R.id.my_toolbar_profile);
+        setSupportActionBar(myToolbarProfile);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
         getProfilePicture();
+
+        // TODO Take picture with camera
 
     }
 
@@ -102,8 +113,10 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
                         if (value.exists()){
                             String name = value.getString("name");
                             String phone = value.getString("phoneNumber");
+                            String email = value.getString("email");
                             tvUsername.setText(name);
                             tvPhone.setText(phone);
+                            tvEmail.setText(email);
                         }
                     }
                 });
@@ -135,7 +148,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
     }
 
     private void uploadImage() {
-
         StorageReference imagesRef = storageReference.child("images/" + currentUserId);
         imagesRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
