@@ -14,11 +14,10 @@
         android:layout_height="128dp"
         android:layout_marginTop="64dp"
         app:civ_border_color="@color/colorAccent"
-
         app:civ_border_width="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar_profile"
         tools:ignore="MissingClass" />
 
     <ImageView
@@ -95,6 +94,7 @@
         android:id="@+id/btn_edit_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/small_button_background"
         android:layout_marginBottom="32dp"
         android:background="@drawable/white_button"
         android:text="@string/edit_profile"
@@ -102,6 +102,5 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_friends_text" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

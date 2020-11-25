@@ -12,12 +12,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Terms_And_Conditions"></activity>
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".Terms_And_Conditions"/>
         <activity android:name=".Chat_messages" />
         <activity android:name=".ListOfMyFriends" />
         <activity android:name=".AddFriends" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"
+            android:parentActivityName=".Chat_Activity"/>
         <activity android:name=".Chat_Activity" />
         <activity android:name=".SingUp" />
         <activity android:name=".MainActivity">
