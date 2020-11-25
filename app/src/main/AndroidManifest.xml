@@ -16,7 +16,8 @@
         <activity android:name=".Terms_And_Conditions"/>
         <activity android:name=".Chat_messages" />
         <activity android:name=".ListOfMyFriends" />
-        <activity android:name=".AddFriends" />
+        <activity android:name=".AddFriends"
+            android:parentActivityName=".Chat_Activity"/>
         <activity android:name=".ProfileActivity"
             android:parentActivityName=".Chat_Activity"/>
         <activity android:name=".Chat_Activity" />
