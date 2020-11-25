@@ -7,6 +7,17 @@
     android:background="@color/colorBackground"
     tools:context=".ProfileActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar_profile"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_profile_picture"
@@ -94,7 +105,6 @@
         android:id="@+id/btn_edit_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_button_background"
         android:layout_marginBottom="32dp"
         android:background="@drawable/white_button"
         android:text="@string/edit_profile"
