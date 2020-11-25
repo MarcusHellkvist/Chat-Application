@@ -1,5 +1,6 @@
 package com.example.chatapplication;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
     private ArrayList<User> searchUser;
+    private ArrayList<Bitmap> imageList;
 
     @NonNull
     @Override
@@ -28,6 +30,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         User currentItem = searchUser.get(position);
         holder.searchUsername.setText(currentItem.getName());
         holder.searchAddIcon.setBackgroundResource(R.drawable.add_icon);
+        if (imageList.size() == 0) {
+            holder.searchUserImage.setImageResource(R.drawable.defaultavatar);
+            return;
+        }
+        holder.searchUserImage.setImageBitmap(imageList.get(position));
         // currentItem.isFriend()
         // holder.searchAddIcon = "Den ena ellse båda"
     }
@@ -77,8 +84,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
 
-    public SearchAdapter(ArrayList<User> searchUser) {
+    public SearchAdapter(ArrayList<User> searchUser, ArrayList<Bitmap> imageList) {
         this.searchUser = searchUser;
+        this.imageList = imageList;
         notifyDataSetChanged();
     }
 
