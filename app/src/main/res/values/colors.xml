@@ -4,7 +4,10 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#BC9983</color>
     <color name="colorText">#FFFFFF</color>
+    <color name="colorTextWhiteButton">#4AB7FF</color>
     <color name="colorButton">#C391B6</color>
-    <color name="colorBackground">#f8d3bc</color>
+    <color name="colorBackground">#4AB7FF</color>
     <color name="colorEditTextFields">#7C7777</color>
+    <color name="colorButtonAccent">#9DCBEA</color>
+    <color name="colorWhiteButton">#FFFFFF</color>
 </resources>

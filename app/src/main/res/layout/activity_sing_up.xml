@@ -3,44 +3,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorBackground"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="75dp"
+        android:layout_height="match_parent"
         android:background="@color/colorBackground"
+        android:padding="75dp"
         tools:context=".SingUp">
 
 
-        <ImageView
-            android:id="@+id/iv_profile_picture_sign_up"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="64dp"
-            android:background="@color/colorButton"
-            android:clickable="true"
-            android:focusable="true"
+        <Button
+            android:id="@+id/round_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/round_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <EditText
             android:id="@+id/user_email_editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="172dp"
+            android:layout_marginTop="16dp"
             android:ems="10"
             android:hint="@string/e_mail"
             android:inputType="textEmailAddress"
             android:textAlignment="center"
-            android:textColor="@color/colorEditTextFields"
-            android:textStyle="bold"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_profile_picture_sign_up" />
+            app:layout_constraintTop_toBottomOf="@+id/round_button" />
 
         <EditText
             android:id="@+id/user_pass_editText"
@@ -50,9 +49,10 @@
             android:ems="10"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:shadowColor="#FFFFFF"
             android:textAlignment="center"
-            android:textColor="@color/colorEditTextFields"
-            android:textStyle="bold"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_email_editText" />
@@ -66,8 +66,8 @@
             android:hint="@string/confirm_password"
             android:inputType="textPassword"
             android:textAlignment="center"
-            android:textColor="@color/colorEditTextFields"
-            android:textStyle="bold"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText"
             app:layout_constraintBottom_toTopOf="@+id/user_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,30 +83,57 @@
             android:inputType="textPersonName"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/colorEditTextFields"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_confirm_pass_editText" />
 
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="39dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="16dp"
+            android:onClick="acceptTermsAndConditionsTicked"
+            android:textColor="@color/colorText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
         <Button
             android:id="@+id/sing_up_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/button_background"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/white_button"
             android:onClick="singUpButtonPressed"
             android:text="@string/sign_up"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorTextWhiteButton"
             android:textSize="24sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+
+        <Button
+            android:id="@+id/textClickableTerms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorBackground"
+            android:onClick="informationTermsAndConditionsClicked"
+            android:text="@string/terms_and_conditions"
+            android:textAlignment="viewStart"
+            android:textColor="@color/colorText"
+            android:textColorHighlight="@color/colorBackground"
+            android:textColorHint="@color/colorBackground"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/checkBox"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

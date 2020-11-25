@@ -14,10 +14,12 @@
         android:layout_height="128dp"
         android:layout_marginTop="64dp"
         app:civ_border_color="@color/colorAccent"
+
         app:civ_border_width="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingClass" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -35,7 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Marcus Hellkvist"
+        android:textColor="@color/colorText"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_profile_picture" />
@@ -44,7 +48,9 @@
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="mhell@gmail.com"
+        android:textColor="@color/colorText"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +60,9 @@
         android:id="@+id/tv_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="0725114141"
+        android:textColor="@color/colorText"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="246"
+        android:textColor="@color/colorText"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +84,7 @@
         android:id="@+id/tv_friends_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorText"
         android:text="@string/friends"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,10 +95,13 @@
         android:id="@+id/btn_edit_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_button_background"
         android:layout_marginBottom="32dp"
+        android:background="@drawable/white_button"
         android:text="@string/edit_profile"
+        android:textColor="@color/colorTextWhiteButton"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_friends_text" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="name"
+        android:textColorHint="@color/colorText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,6 +24,7 @@
         android:id="@+id/et_dialog_profile_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/colorText"
         android:ems="10"
         android:inputType="phone"
         android:hint="phone number"

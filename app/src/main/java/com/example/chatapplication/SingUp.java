@@ -24,7 +24,6 @@ public class SingUp extends AppCompatActivity {
     private FirebaseFirestore db;
 
 
-
     private EditText email;
     private EditText pass;
     private EditText confrimPassword;
@@ -52,11 +51,11 @@ public class SingUp extends AppCompatActivity {
 
     public void singUpButtonPressed(View view) {
 
-                    final String userEmail = email.getText().toString().toLowerCase().trim();
-                    final String userPass = pass.getText().toString().trim();
-                    final String confirmedPass = confrimPassword.getText().toString().trim();
-                    final String userName = name.getText().toString().trim().toLowerCase();
-                    //final String userTelNumber = userNumber.getText().toString().trim();
+        final String userEmail = email.getText().toString().toLowerCase().trim();
+        final String userPass = pass.getText().toString().trim();
+        final String confirmedPass = confrimPassword.getText().toString().trim();
+        final String userName = name.getText().toString().trim().toLowerCase();
+        //final String userTelNumber = userNumber.getText().toString().trim();
 
         //Added an if statement to make sure the password is entered correctly. /JR
         if (userPass.equals(confirmedPass)) {
@@ -85,14 +84,27 @@ public class SingUp extends AppCompatActivity {
                     }
 
 
-                            }
-
-
-                        });
-                    } else {
-                        Toast.makeText(SingUp.this, "Passwords don't match, pls try again", Toast.LENGTH_LONG).show();
-                    }
                 }
 
 
+            });
+        } else {
+            Toast.makeText(SingUp.this, "Passwords don't match, pls try again", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public void informationTermsAndConditionsClicked(View view) {
+        Terms_And_ConditionsIntentActivity();
+    }
+
+    private void Terms_And_ConditionsIntentActivity() {
+        Intent intent = new Intent(this, Terms_And_Conditions.class);
+        startActivity(intent);
+    }
+
+    public void acceptTermsAndConditionsTicked(View view) {
+
+    }
 }
+

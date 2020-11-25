@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Chat_messages"></activity>
+        <activity android:name=".Terms_And_Conditions"></activity>
+        <activity android:name=".Chat_messages" />
         <activity android:name=".ListOfMyFriends" />
         <activity android:name=".AddFriends" />
         <activity android:name=".ProfileActivity" />

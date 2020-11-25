@@ -16,4 +16,11 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="friend_name">Friend Name</string>
     <string name="search_new_friends">Search New Friends</string>
+    <string name="accept_terms_and_conditons">Accept terms and conditons</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="terms"> When you use this App, your soul will be held captive by the secret clan of Appers. You will never return and see the sunlight again. Ever.  </string>
+    <string name="go_back">Go back</string>
+    <string name="last_message_or_mobile_number">Last message or Mobile number</string>
+    <string name="textview">TextView</string>
+    />
 </resources>

@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorBackground">
 
     <TextView
         android:id="@+id/name"
@@ -22,13 +23,14 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
         android:padding="10dp"
-        android:text="TextView"
-        android:textColor="#3b313b"
+        android:text="@string/textview"
+        android:background="@color/colorBackground"
+        android:textColor="@color/colorTextWhiteButton"
         android:textSize="18sp"
         app:angle="14dp"
         app:arrowLocation="right"
         app:arrowPosition="20dp"
-        app:bubbleColor="#ebc5eb"
+        app:bubbleColor="@color/colorWhiteButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 

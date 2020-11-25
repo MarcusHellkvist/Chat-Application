@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/search_button"
+        android:textColorHint="@color/colorText"
         android:hint="@string/search_new_friends"
         android:inputType="textPersonName" />
 
