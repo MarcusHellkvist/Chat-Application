@@ -4,31 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
-    android:background="@color/colorBackground"
+    android:background="#2196F3"
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="6dp"
-        android:background="@color/colorBackground">
+        android:layout_margin="6dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/search_user_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:padding="2dp"
-            android:textColor="@color/colorText"
-            android:src="@drawable/person_icon"
-            />
+            android:padding="2dp" />
 
         <TextView
             android:id="@+id/search_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/colorText"
-            android:textColorHint="@color/colorText"
             android:layout_marginLeft="16dp"
             android:layout_toEndOf="@+id/search_user_image"
             android:layout_toRightOf="@+id/search_user_image"
@@ -46,7 +40,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:padding="8dp"
-            android:src="@drawable/add_icon" />
+           />
 
 
     </RelativeLayout>
