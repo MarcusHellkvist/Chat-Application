@@ -26,6 +26,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListOfMyFriends extends AppCompatActivity {
 
@@ -40,6 +42,8 @@ public class ListOfMyFriends extends AppCompatActivity {
     private String idUFriend;
     private String currentUserId;
     private User user;
+    private String converName;
+
 
     private ArrayList<User> myFriendsList = new ArrayList<>();
 
@@ -55,6 +59,7 @@ public class ListOfMyFriends extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
 
+
         friendsRecyclerView = findViewById(R.id.list_of_my_friends_RecyclerView);
         friendsRecyclerView.setHasFixedSize(true);
         myFriendsAdapter = new MyFriendsAdapter(myFriendsList);
@@ -65,7 +70,10 @@ public class ListOfMyFriends extends AppCompatActivity {
         myFriendsAdapter.setFriendOnItemClickListener(new MyFriendsAdapter.OnItemClickListener() {
             @Override
             public void OnItemClicked(int position, View view) {
+
                 User myFriends = myFriendsList.get(position);
+                idUFriend = myFriends.getIdFirebase();
+
                 chatIntent();
             }
         });
@@ -89,6 +97,7 @@ public class ListOfMyFriends extends AppCompatActivity {
                                         // LÄGG TILL I FRIENDS ADAPTER
                                         user = document.toObject(User.class);
                                         myFriendsList.add(user);
+
                                     }
                                 }
                             }
@@ -132,7 +141,87 @@ public class ListOfMyFriends extends AppCompatActivity {
 
 
     public void chatIntent() {
-        startActivity(new Intent(this, Chat_Activity.class));
+
+
+
+
+
+
+        Log.d("alona", "chatIntent: " + currentUserId);
+        Log.d("alona", "chatIntent: " + idUFriend);
+
+
+
+        DocumentReference docRef = db.collection("User conversation").document("id" + idUFriend + currentUserId);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+
+                    if (document.exists()) {
+
+                        Log.d("alona", "onComplete: DOCUMENT FINNS");
+                        converName = idUFriend + currentUserId;
+                        converName.toString();
+
+                        Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
+                        intent.putExtra("chat_key", converName);
+                        startActivity(intent);
+
+
+
+                    } else {
+                        db.collection("User conversation").document("id" + currentUserId + idUFriend).get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                converName = currentUserId + idUFriend;
+                                                converName.toString();
+
+                                                Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
+                                                intent.putExtra("chat_key", converName);
+                                                startActivity(intent);
+
+
+                                            } else {
+                                                Map<String, Object> data = new HashMap<>();
+                                                data.put("id", "2");
+                                                db.collection("User conversation").document("id" + currentUserId + idUFriend).set(data);
+
+                                                converName = currentUserId + idUFriend;
+                                                converName.toString();
+
+                                                Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
+                                                intent.putExtra("chat_key", converName);
+                                                startActivity(intent);
+
+
+
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+
+                    }
+                }
+            });
+        }
     }
 
-}
+
+
+
+
+
+
+
+
+
+

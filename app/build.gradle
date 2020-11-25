@@ -46,6 +46,8 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.github.lguipeng:BubbleView:1.0.1'
 
+    implementation 'com.android.support:multidex:1.0.3'
+
 
 
 
