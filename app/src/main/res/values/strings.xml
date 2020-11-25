@@ -23,5 +23,6 @@
     <string name="last_message_or_mobile_number">Last message or Mobile number</string>
     <string name="textview">TextView</string>
     <string name="write_your_message">Write your message</string>
+    <string name="phone_number">Phone number</string>
     />
 </resources>

@@ -16,10 +16,11 @@ public class User {
         this.address = address;
     }
 
-    public User(String name, String email, String idFirebase) {
+    public User(String name, String email, String idFirebase, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.idFirebase = idFirebase;
+        this.phoneNumber = phoneNumber;
     }
 
     public User(String name) {

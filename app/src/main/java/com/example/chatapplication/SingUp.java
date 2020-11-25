@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,8 +29,9 @@ public class SingUp extends AppCompatActivity {
     private EditText pass;
     private EditText confrimPassword;
     private EditText name;
-    //private EditText userNumber;
+    private EditText userNumber;
     private String idFirebase;
+    private CheckBox acceptTerms;
 
 
     @SuppressLint("WrongViewCast")
@@ -42,10 +44,11 @@ public class SingUp extends AppCompatActivity {
         pass = findViewById(R.id.user_pass_editText);
         confrimPassword = findViewById(R.id.user_confirm_pass_editText);
         name = findViewById(R.id.user_name);
-        //userNumber = findViewById(R.id.user_telNumber);
+        userNumber = findViewById(R.id.user_telNumber);
         db = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
+        acceptTerms = findViewById(R.id.checkBox);
 
     }
 
@@ -55,10 +58,10 @@ public class SingUp extends AppCompatActivity {
         final String userPass = pass.getText().toString().trim();
         final String confirmedPass = confrimPassword.getText().toString().trim();
         final String userName = name.getText().toString().trim().toLowerCase();
-        //final String userTelNumber = userNumber.getText().toString().trim();
+        final String userTelNumber = userNumber.getText().toString().trim();
 
         //Added an if statement to make sure the password is entered correctly. /JR
-        if (userPass.equals(confirmedPass)) {
+        if (userPass.equals(confirmedPass) && acceptTerms.isChecked()) {
             mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -66,7 +69,7 @@ public class SingUp extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         //get user id from Firebase
                         idFirebase = mAuth.getCurrentUser().getUid();
-                        User user = new User(userName, userEmail, idFirebase);
+                        User user = new User(userName, userEmail, idFirebase, userTelNumber);
                         db.collection("users").document(idFirebase).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -89,7 +92,7 @@ public class SingUp extends AppCompatActivity {
 
             });
         } else {
-            Toast.makeText(SingUp.this, "Passwords don't match, pls try again", Toast.LENGTH_LONG).show();
+            Toast.makeText(SingUp.this, "Something went wrong, pls try again", Toast.LENGTH_LONG).show();
         }
     }
 

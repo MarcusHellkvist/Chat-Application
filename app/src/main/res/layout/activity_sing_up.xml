@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBackground"
-        android:padding="75dp"
+        android:padding="00dp"
         tools:context=".SingUp">
 
 
@@ -19,7 +19,7 @@
             android:id="@+id/round_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/round_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -91,15 +91,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_confirm_pass_editText" />
 
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="39dp"
-            android:layout_height="23dp"
+        <EditText
+            android:id="@+id/user_telNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:onClick="acceptTermsAndConditionsTicked"
+            android:text="@string/phone_number"
             android:textColor="@color/colorText"
+            android:textColorHint="@color/colorText"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
+        />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorText"
+            app:layout_constraintEnd_toStartOf="@+id/textClickableTerms"
+            app:layout_constraintTop_toTopOf="@+id/textClickableTerms" />
 
         <Button
             android:id="@+id/sing_up_button"
@@ -114,7 +127,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+            app:layout_constraintTop_toBottomOf="@+id/textClickableTerms" />
 
         <Button
             android:id="@+id/textClickableTerms"
@@ -124,14 +137,16 @@
             android:background="@color/colorBackground"
             android:onClick="informationTermsAndConditionsClicked"
             android:text="@string/terms_and_conditions"
-            android:textAlignment="viewStart"
+            android:textAlignment="center"
             android:textColor="@color/colorText"
             android:textColorHighlight="@color/colorBackground"
             android:textColorHint="@color/colorBackground"
-            android:textSize="18sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/checkBox"
-            app:layout_constraintTop_toBottomOf="@+id/user_name" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_telNumber" />
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
