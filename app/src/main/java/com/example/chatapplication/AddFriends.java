@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +38,7 @@ public class AddFriends extends AppCompatActivity {
 
     private EditText searchEditText;
     private ImageView image;
+    private Toolbar myToolbarAddFriend;
 
     private RecyclerView searchRecyclerView;
     private SearchAdapter searchAdapter;
@@ -67,6 +70,12 @@ public class AddFriends extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
+
+        //TOOLBAR
+        myToolbarAddFriend = findViewById(R.id.my_toolbar_addFriend);
+        setSupportActionBar(myToolbarAddFriend);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();

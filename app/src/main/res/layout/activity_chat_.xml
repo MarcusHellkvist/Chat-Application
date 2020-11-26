@@ -52,17 +52,5 @@
         app:layout_constraintEnd_toStartOf="@+id/btn_profile"
         app:layout_constraintStart_toEndOf="@+id/button_add_friend" />
 
-    <Button
-        android:id="@+id/go_to_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:background="@drawable/small_white_bitton"
-        android:textColor="@color/colorTextWhiteButton"
-        android:onClick="goToChstButtonPressed"
-        android:text="Go to chat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/log_out" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
