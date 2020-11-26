@@ -104,7 +104,8 @@ public class AddFriends extends AppCompatActivity {
             @Override
             public void OnItemClicked(int position, View view) {
                 User newFriend = searchUser.get(position);
-                profileIntent();
+                String friendId = searchUser.get(position).getIdFirebase();
+                profileIntent(friendId);
             }
 
             // ADD FRIENDS ID TO CURRENT USER FRIENDS COLLECTIONS
@@ -209,8 +210,10 @@ public class AddFriends extends AppCompatActivity {
         startActivity(new Intent(this, ListOfMyFriends.class));
     }
 
-    public void profileIntent() {
-        startActivity(new Intent(this, ProfileActivity.class));
+    public void profileIntent(String friendId) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("uid", friendId);
+        startActivity(intent);
     }
 
 

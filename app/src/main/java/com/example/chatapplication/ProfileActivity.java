@@ -56,14 +56,13 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
     private static final int GALLERY_REQUEST_CODE = 1;
     private static final int CAMERA_REQUEST_CODE = 2;
 
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private CollectionReference usersRef;
     private StorageReference storageReference;
 
-    private ImageView ivProfilePicture;
+    private ImageView ivProfilePicture, ivPenIcon;
     private TextView tvUsername, tvEmail, tvPhone, tvAmountFriends;
     private Button btnEditProfile;
 
@@ -91,6 +90,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
 
         // IMAGE VIEWS
         ivProfilePicture = findViewById(R.id.iv_profile_picture);
+        ivPenIcon = findViewById(R.id.iv_pen_icon);
         ivProfilePicture.setOnClickListener(changePictureListener);
         
         // TEXT VIEWS
@@ -109,11 +109,18 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        Intent intent = getIntent();
+        String uid = intent.getStringExtra("uid");
+        if (uid != null){
+            currentUserId = uid;
+            btnEditProfile.setVisibility(View.INVISIBLE);
+            ivProfilePicture.setClickable(false);
+            ivPenIcon.setVisibility(View.INVISIBLE);
+        }
+
+
         getProfilePicture();
 
-        // TODO Take picture with camera
-        // TODO Crop Images
-        // TODO See other peoples profile
         // TODO Animations!
 
     }
