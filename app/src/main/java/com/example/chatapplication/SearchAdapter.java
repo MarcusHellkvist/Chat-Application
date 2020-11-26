@@ -27,6 +27,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     @Override
     public void onBindViewHolder(@NonNull SearchAdapter.SearchViewHolder holder, int position) {
+
         User currentItem = searchUser.get(position);
         holder.searchUsername.setText(currentItem.getName());
         holder.searchAddIcon.setBackgroundResource(R.drawable.add_icon);
