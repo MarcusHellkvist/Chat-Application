@@ -2,7 +2,9 @@ package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,6 +55,8 @@ public class ListOfMyFriends extends AppCompatActivity {
     private FirebaseStorage storage;
     final long ONE_MEGABYTE = 1024 * 1024;
 
+    private Toolbar myToolbarFriendActivity;
+
 
     private ArrayList<User> myFriendsList = new ArrayList<>();
     private ArrayList<String> friendListId = new ArrayList<>();
@@ -78,6 +82,12 @@ public class ListOfMyFriends extends AppCompatActivity {
         friendsManager = new LinearLayoutManager(this);
         friendsRecyclerView.setLayoutManager(friendsManager);
         friendsRecyclerView.setAdapter(myFriendsAdapter);
+
+        // toolbar
+        myToolbarFriendActivity = findViewById(R.id.my_toolbar_friends);
+        setSupportActionBar(myToolbarFriendActivity);
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle("My Friends");
 
         myFriendsAdapter.setFriendOnItemClickListener(new MyFriendsAdapter.OnItemClickListener() {
             @Override

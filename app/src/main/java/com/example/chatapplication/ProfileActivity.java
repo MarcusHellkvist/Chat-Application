@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -106,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         btnEditProfile.setOnClickListener(editListener);
 
         //TOOLBAR
-        myToolbarProfile = findViewById(R.id.my_toolbar_profile);
+        myToolbarProfile = findViewById(R.id.my_toolbar_friends);
         setSupportActionBar(myToolbarProfile);
         ActionBar ab = getSupportActionBar();
         ab.setTitle("Profile");

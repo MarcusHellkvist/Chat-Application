@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(MainActivity.this, "User loged in", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent (MainActivity.this, Chat_Activity.class);
-                    startActivity(intent);
+                    listFriendsIntent();
                 }else {
                     Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
@@ -66,9 +65,13 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
        if(currentUser != null) {
-           Intent intent = new Intent (this, ListOfMyFriends.class);
-           startActivity(intent);
+           listFriendsIntent();
        }
+    }
+
+    public void listFriendsIntent (){
+        Intent intent = new Intent (this, ListOfMyFriends.class);
+        startActivity(intent);
     }
 
 

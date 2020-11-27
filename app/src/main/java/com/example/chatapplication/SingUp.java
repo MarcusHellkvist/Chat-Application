@@ -73,7 +73,7 @@ public class SingUp extends AppCompatActivity {
                         db.collection("users").document(idFirebase).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Intent intent = new Intent(SingUp.this, Chat_Activity.class);
+                                Intent intent = new Intent(SingUp.this, ListOfMyFriends.class);
                                 startActivity(intent);
                                 Log.d("Jenny", "Ny använade skall vara skapad");
                             }
