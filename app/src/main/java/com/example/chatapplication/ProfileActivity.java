@@ -109,6 +109,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         myToolbarProfile = findViewById(R.id.my_toolbar_profile);
         setSupportActionBar(myToolbarProfile);
         ActionBar ab = getSupportActionBar();
+        ab.setTitle("Profile");
         ab.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
