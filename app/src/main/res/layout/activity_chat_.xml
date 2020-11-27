@@ -7,18 +7,17 @@
     android:background="@color/colorBackground"
     tools:context=".Chat_Activity">
 
-    <Button
-        android:id="@+id/log_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/small_white_bitton"
-        android:onClick="logOutButtonPressed"
-        android:text="@string/log_out"
-        android:textColor="@color/colorTextWhiteButton"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar_friendActivity"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <Button
         android:id="@+id/btn_profile"

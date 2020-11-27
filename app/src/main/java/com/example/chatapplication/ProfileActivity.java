@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -107,6 +109,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         myToolbarProfile = findViewById(R.id.my_toolbar_profile);
         setSupportActionBar(myToolbarProfile);
         ActionBar ab = getSupportActionBar();
+        ab.setTitle("Profile");
         ab.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
@@ -274,6 +277,22 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.logout_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            mAuth.signOut();
+            startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private View.OnClickListener editListener = new View.OnClickListener() {

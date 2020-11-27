@@ -75,6 +75,7 @@ public class AddFriends extends AppCompatActivity {
         myToolbarAddFriend = findViewById(R.id.my_toolbar_addFriend);
         setSupportActionBar(myToolbarAddFriend);
         ActionBar ab = getSupportActionBar();
+        ab.setTitle("Add friends");
         ab.setDisplayHomeAsUpEnabled(true);
 
         storage = FirebaseStorage.getInstance();
