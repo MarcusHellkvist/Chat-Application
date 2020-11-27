@@ -16,7 +16,7 @@
 
         >
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/my_friend_imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"

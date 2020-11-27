@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -24,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,10 +49,14 @@ public class ListOfMyFriends extends AppCompatActivity {
     private User user;
     private String converName;
 
+    private StorageReference storageReference;
+    private FirebaseStorage storage;
+    final long ONE_MEGABYTE = 1024 * 1024;
+
 
     private ArrayList<User> myFriendsList = new ArrayList<>();
-
     private ArrayList<String> friendListId = new ArrayList<>();
+    private ArrayList<Bitmap> imageListOfFriends = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +68,13 @@ public class ListOfMyFriends extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
 
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
 
         friendsRecyclerView = findViewById(R.id.list_of_my_friends_RecyclerView);
         friendsRecyclerView.setHasFixedSize(true);
-        myFriendsAdapter = new MyFriendsAdapter(myFriendsList);
+        myFriendsAdapter = new MyFriendsAdapter(myFriendsList, imageListOfFriends);
         friendsManager = new LinearLayoutManager(this);
         friendsRecyclerView.setLayoutManager(friendsManager);
         friendsRecyclerView.setAdapter(myFriendsAdapter);
@@ -77,13 +89,16 @@ public class ListOfMyFriends extends AppCompatActivity {
                 chatIntent();
             }
         });
-
+        //imageListOfFriends.clear();
+        //friendListId.clear();
         getFriendList();
+
 
     }
 
     // SHOW LIST OF FRIENDS
     private void showFriendList() {
+        Log.d("TAG", "showFriendList: " + friendListId.size());
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -97,11 +112,36 @@ public class ListOfMyFriends extends AppCompatActivity {
                                         // LÄGG TILL I FRIENDS ADAPTER
                                         user = document.toObject(User.class);
                                         myFriendsList.add(user);
+                                        idUFriend = document.getId();
 
+                                        StorageReference imagesRef =
+                                                storageReference.child("images/" + idUFriend);
+                                        imagesRef.getBytes(ONE_MEGABYTE)
+                                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                    @Override
+                                                    public void onSuccess(byte[] bytes) {
+                                                        Bitmap bitmap =
+                                                                BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                        imageListOfFriends.add(bitmap);
+                                                        Log.d("TAG", "onSuccess: " + imageListOfFriends.size());
+                                                        myFriendsAdapter.notifyDataSetChanged();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Bitmap bitmap =
+                                                        BitmapFactory.decodeResource(getResources(), R.drawable.defaultavatar);
+                                                imageListOfFriends.add(bitmap);
+                                                Log.d("TAG", "onFailure: error " + e.getLocalizedMessage());
+
+                                            }
+
+                                        });
+                                        myFriendsAdapter.notifyDataSetChanged();
                                     }
                                 }
                             }
-                            myFriendsAdapter.notifyDataSetChanged();
+                           myFriendsAdapter.notifyDataSetChanged();
                         }
                     }
                 })
@@ -137,22 +177,17 @@ public class ListOfMyFriends extends AppCompatActivity {
                         Toast.makeText(ListOfMyFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
     }
 
 
     public void chatIntent() {
 
-
-
-
-
-
         Log.d("alona", "chatIntent: " + currentUserId);
         Log.d("alona", "chatIntent: " + idUFriend);
 
-
-
-        DocumentReference docRef = db.collection("User conversation").document("id" + idUFriend + currentUserId);
+        DocumentReference docRef =
+                db.collection("User conversation").document("id" + idUFriend + currentUserId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -171,7 +206,6 @@ public class ListOfMyFriends extends AppCompatActivity {
                         startActivity(intent);
 
 
-
                     } else {
                         db.collection("User conversation").document("id" + currentUserId + idUFriend).get()
                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -184,7 +218,8 @@ public class ListOfMyFriends extends AppCompatActivity {
                                                 converName = currentUserId + idUFriend;
                                                 converName.toString();
 
-                                                Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
+                                                Intent intent =
+                                                        new Intent(ListOfMyFriends.this, Chat_messages.class);
                                                 intent.putExtra("chat_key", converName);
                                                 startActivity(intent);
 
@@ -197,23 +232,35 @@ public class ListOfMyFriends extends AppCompatActivity {
                                                 converName = currentUserId + idUFriend;
                                                 converName.toString();
 
-                                                Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
+                                                Intent intent =
+                                                        new Intent(ListOfMyFriends.this, Chat_messages.class);
                                                 intent.putExtra("chat_key", converName);
                                                 startActivity(intent);
-
 
 
                                             }
                                         }
                                     }
                                 });
-                        }
-
                     }
+
                 }
-            });
-        }
+            }
+        });
     }
+
+    public void addFriendBtn(View view) {
+        startActivity(new Intent(this, AddFriends.class));
+    }
+
+    public void profileBtn(View view) {
+        startActivity(new Intent(this, ProfileActivity.class));
+    }
+
+
+
+
+}
 
 
 

@@ -21,7 +21,7 @@ public class Chat_Activity extends AppCompatActivity {
 
         //BUTTON VIEWS
         btnProfile = findViewById(R.id.btn_profile);
-        btnMyFriends = findViewById(R.id.btn_myfriends);
+        btnMyFriends = findViewById(R.id.my_profile_btn);
         btnProfile.setOnClickListener(goToProfileListener);
         btnMyFriends.setOnClickListener(goToMyFriendsListener);
 

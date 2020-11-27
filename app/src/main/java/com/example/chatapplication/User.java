@@ -1,11 +1,16 @@
 package com.example.chatapplication;
 
+import android.graphics.Bitmap;
+
+import java.util.ArrayList;
+
 public class User {
     private String name;
     private String phoneNumber;
     private String email;
     private String idFirebase;
     private String address;
+    private ArrayList<Bitmap> imageList;
 
 
     public User(String name, String phoneNumber, String email, String idFirebase,String address) {
