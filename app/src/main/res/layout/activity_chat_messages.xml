@@ -7,38 +7,31 @@
     android:background="@color/colorBackground"
     tools:context=".Chat_messages">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="@id/editText_message"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/log_out"
-        android:layout_width="62dp"
-        android:layout_height="51dp"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:background="@drawable/small_button_background"
-        android:src="@mipmap/log_out_button_round"
-        android:onClick="logOutButton"
+
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_userMessage"
+        android:layout_width="360dp"
+        android:layout_height="431dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/send_message_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.991"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="0dp" />
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <EditText
         android:id="@+id/editText_message"
         android:layout_width="334dp"
         android:layout_height="51dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="4dp"
         android:ems="10"
         android:hint="@string/write_your_message"
         android:inputType="textPersonName"
@@ -47,29 +40,72 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send_message_button"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_userMessage"
-        android:layout_width="360dp"
-        android:layout_height="431dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText_message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.348" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView_userMessage"
+        app:layout_constraintVertical_bias="0.909" />
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="@id/editText_message"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/send_message_button"
-        android:layout_width="65dp"
-        android:layout_height="53dp"
-        android:background="@drawable/small_button_background"
-        android:src="@mipmap/send_button"
+        android:layout_width="76dp"
+        android:layout_height="44dp"
         android:layout_marginBottom="4dp"
+        android:background="@drawable/white_button"
+        android:src="@drawable/send_button_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_photo"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
-         />
+        app:layout_constraintTop_toTopOf="parent"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#F57C00"
+        app:srcCompat="@drawable/ic_edit" />
+
+    <ImageButton
+        android:id="@+id/log_out"
+        android:layout_width="50dp"
+        android:layout_height="42dp"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_button"
+        android:onClick="back_to_friendList"
+        android:src="@drawable/back_to_friends_foreground"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toStartOf="@+id/text_user_name"
+        app:layout_constraintHorizontal_bias="0.069"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:text="TextView"
+        android:textColor="#F57C00"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toStartOf="@+id/user_photo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

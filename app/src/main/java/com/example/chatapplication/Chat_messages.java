@@ -1,45 +1,51 @@
 package com.example.chatapplication;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+
+
 
 public class Chat_messages extends AppCompatActivity {
 
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
 
     private RecyclerView messagesRecyclerView;
     private MessagesAdapter adapter;
+
+    private Bitmap userProfilePhoto;
+
 
 
     private ArrayList<Message> messages = new ArrayList<>();
@@ -48,17 +54,17 @@ public class Chat_messages extends AppCompatActivity {
 
     private ImageButton sendBtn;
     private EditText editTextMessage;
-    private ImageView userPhoto;
+
     LinearLayoutManager layoutManager;
+
+    private String friendPhoto;
 
 
     private String userNName;
     private String conversetionID;
 
-
-
-
-
+    private ImageView profPHOTO;
+    private TextView textNameUs;
 
 
 
@@ -67,15 +73,19 @@ public class Chat_messages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_messages);
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+
+
+
+
         messages.clear();
 
 
-
         Bundle idConvName = getIntent().getExtras();
-
-        conversetionID= idConvName.getString("chat_key");
-
-
+        conversetionID = idConvName.getString("chat_key");
+        friendPhoto = idConvName.getString("friend_photo");
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -84,8 +94,10 @@ public class Chat_messages extends AppCompatActivity {
         userNName = mAuth.getCurrentUser().getEmail();
         sendBtn = findViewById(R.id.send_message_button);
         editTextMessage = findViewById(R.id.editText_message);
-        // userPhoto = findViewById(R.id.profil_photo);
+        profPHOTO = findViewById(R.id.user_photo);
 
+        textNameUs = findViewById(R.id.text_user_name);
+        textNameUs.setText(userNName);
 
 
 
@@ -99,19 +111,19 @@ public class Chat_messages extends AppCompatActivity {
                 addMessageToFB(message);
 
 
-
             }
 
         });
-        messagesRecyclerView = findViewById(R.id.recyclerView_userMessage);
-
-        adapter = new MessagesAdapter(messages, userNName);
-        messagesRecyclerView.setAdapter(adapter);
 
 
         layoutManager = new LinearLayoutManager(this);
+        messagesRecyclerView = Chat_messages.this.findViewById(R.id.recyclerView_userMessage);
+        adapter = new MessagesAdapter(messages, userNName);
 
 
+        getUsPHoto();
+       // getFrPHoto();
+        messagesRecyclerView.setAdapter(adapter);
 
         messagesRecyclerView.setLayoutManager(layoutManager);
         layoutManager.setStackFromEnd(true);
@@ -120,11 +132,8 @@ public class Chat_messages extends AppCompatActivity {
     }
 
 
-
-
-    public void logOutButton(View view) {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(this, MainActivity.class);
+    public void back_to_friendList(View view) {
+        Intent intent = new Intent(this, ListOfMyFriends.class);
         startActivity(intent);
     }
 
@@ -132,7 +141,7 @@ public class Chat_messages extends AppCompatActivity {
 
 
         // messages.clear();
-        db.collection("User conversation").document("id"+ conversetionID)
+        db.collection("User conversation").document("id" + conversetionID)
                 .collection("messages").add(message);
         editTextMessage.setText("");
 
@@ -149,10 +158,10 @@ public class Chat_messages extends AppCompatActivity {
 
     private void getFBMessages() {
 
-        Log.d("alona", "ConversationID" +  conversetionID);
+        Log.d("alona", "ConversationID" + conversetionID);
 
-        final Query docRef = db.collection("User conversation").document("id"+ conversetionID).collection("messages").orderBy("messageTime");
-        docRef.addSnapshotListener(this,new EventListener<QuerySnapshot>() {
+        final Query docRef = db.collection("User conversation").document("id" + conversetionID).collection("messages").orderBy("messageTime");
+        docRef.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
@@ -166,15 +175,14 @@ public class Chat_messages extends AppCompatActivity {
 
                     messages.clear();
 
-                    for(DocumentSnapshot document: value.getDocuments()){
+                    for (DocumentSnapshot document : value.getDocuments()) {
                         Message messagge = document.toObject(Message.class);
                         messages.add(messagge);
 
 
                     }
 
-                   adapter.notifyDataSetChanged();
-
+                    adapter.notifyDataSetChanged();
 
 
                 } else {
@@ -184,10 +192,44 @@ public class Chat_messages extends AppCompatActivity {
         });
 
 
+    }
+
+
+        private void getUsPHoto() {
+
+        String refToFireStore = mAuth.getCurrentUser().getUid();
+        StorageReference profilePHUser = storageReference.child("images/" + refToFireStore);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        profilePHUser.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                userProfilePhoto = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                profPHOTO.setImageBitmap(userProfilePhoto);
+
+
+
+            }
+
+
+        });
+        Log.d("alona", " message photo" + userProfilePhoto);
 
 
     }
+
+  /*  private void getNameForUs (){
+        final String searchPhoneNumber = textNameUs.getText().toString().trim();
+
+        db.collection("users")
+                .document(mAuth.getCurrentUser().getUid()).getChild("name");
+                        //("name", searchPhoneNumber);
+    }*/
+
+
+
 }
+
 
 
 

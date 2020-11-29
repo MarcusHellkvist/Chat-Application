@@ -168,6 +168,7 @@ public class ListOfMyFriends extends AppCompatActivity {
 
                         Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
                         intent.putExtra("chat_key", converName);
+                        intent.putExtra("friend_photo", idUFriend);
                         startActivity(intent);
 
 
@@ -186,7 +187,10 @@ public class ListOfMyFriends extends AppCompatActivity {
 
                                                 Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
                                                 intent.putExtra("chat_key", converName);
+                                                intent.putExtra("friend_photo", idUFriend);
                                                 startActivity(intent);
+
+
 
 
                                             } else {
@@ -199,6 +203,7 @@ public class ListOfMyFriends extends AppCompatActivity {
 
                                                 Intent intent = new Intent(ListOfMyFriends.this, Chat_messages.class);
                                                 intent.putExtra("chat_key", converName);
+                                                intent.putExtra("friend_photo", idUFriend);
                                                 startActivity(intent);
 
 

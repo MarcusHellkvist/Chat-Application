@@ -1,9 +1,13 @@
 package com.example.chatapplication;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,10 +22,14 @@ public class MessagesAdapter extends RecyclerView.Adapter <MessagesAdapter.Messa
     private String messageType;
 
 
-    public MessagesAdapter (ArrayList<Message> messagesList, String email){
+
+    public MessagesAdapter (ArrayList<Message> messagesList, String email) {
         this.messagesList = messagesList;
         this.userEmail = email;
+
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
@@ -32,6 +40,10 @@ public class MessagesAdapter extends RecyclerView.Adapter <MessagesAdapter.Messa
         messageType = "another";
         return 0;
     }
+
+
+
+
     @NonNull
     @Override
     public MessagesAdapter.MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,13 +55,21 @@ public class MessagesAdapter extends RecyclerView.Adapter <MessagesAdapter.Messa
         return viewHolder;
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull MessagesAdapter.MessageViewHolder holder, int position) {
         Message message = messagesList.get(position);
 
+       // holder.imageViewPhoto.setImageBitmap(message.getPhoto());
+
+
         holder.textViewName.setText(message.getUserName());
         holder.textViewMessageText.setText(message.getTextMessage());
         holder.textViewTime.setText(DateFormat.format("yyyy-MM-dd HH:mm:ss", message.getMessageTime()));
+
+
+
 
     }
     @Override
@@ -58,6 +78,7 @@ public class MessagesAdapter extends RecyclerView.Adapter <MessagesAdapter.Messa
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
+
         public TextView textViewName;
         public TextView textViewMessageText;
         public TextView textViewTime;
@@ -70,11 +91,13 @@ public class MessagesAdapter extends RecyclerView.Adapter <MessagesAdapter.Messa
             super(itemView);
 
             if (messageType.equals("user")) {
+
                 textViewName = itemView.findViewById(R.id.name);
                 textViewMessageText = itemView.findViewById(R.id.message_text);
                 textViewTime = itemView.findViewById(R.id.time);
-                // userPhoto = itemView.findViewById(R.id.user_photo);
+
             } else {
+
                 textViewName = itemView.findViewById(R.id.friendName);
                 textViewMessageText = itemView.findViewById(R.id.friend_sms_text);
                 textViewTime = itemView.findViewById(R.id.friend_message_time);

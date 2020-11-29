@@ -1,18 +1,15 @@
 package com.example.chatapplication;
 
-import android.widget.ImageView;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
-import java.text.DateFormat;
 import java.util.Date;
-
-
-import android.widget.TextView;
 
 public class Message {
     private String userName;;
     private String textMessage;
     private String friendId;
-    // private ImageView photo;
+    private Bitmap photo;
     private long messageTime;
 
 
@@ -23,7 +20,7 @@ public class Message {
     public Message(String userName, String textMessage) {
         this.textMessage = textMessage;
         this.userName = userName;
-        //this.photo = photo;
+        this.photo = photo;
         this.friendId = friendId;
         this.messageTime = new Date().getTime();
         // this.friendText = friendText;
@@ -46,15 +43,6 @@ public class Message {
         this.messageTime = messageTime;
     }
 
- /*   public User getMessageUser() {
-        return messageUser;
-    }
-
-    public void setMessageUser(User messageUser) {
-        this.messageUser = messageUser;
-        }
-
-  */
 
     public String getUserName() {
         return userName;
@@ -72,36 +60,18 @@ public class Message {
         this.friendId = friendId;
     }
 
-  /*  public ImageView getUserPhoto() {
-        return userPhoto;
+    public Bitmap getPhoto() {
+        return photo;
     }
 
-    public void setUserPhoto(ImageView userPhoto) {
-        this.userPhoto = userPhoto;
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
     }
 
 
 
-    public String getFriendText() {
-        return friendText;
-    }
-
-    public void setFriendText(String friendText) {
-        this.friendText = friendText;
-    }
-    */
 
 
-
-    /*
-    public String getFriendName() {
-        return friendName;
-    }
-
-    public void setFriendName(String friendName) {
-        this.friendName = friendName;
-    }
-*/
 
 }
 

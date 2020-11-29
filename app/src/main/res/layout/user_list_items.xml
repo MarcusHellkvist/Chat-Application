@@ -10,11 +10,10 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:layout_marginEnd="12dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/user_photo" />
 
     <com.github.library.bubbleview.BubbleTextView
         android:id="@+id/message_text"
@@ -22,10 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
+        android:background="@color/colorBackground"
         android:padding="10dp"
         android:text="@string/textview"
-        android:background="@color/colorBackground"
-        android:textColor="@color/colorTextWhiteButton"
+        android:textColor="@android:color/holo_orange_dark"
         android:textSize="18sp"
         app:angle="14dp"
         app:arrowLocation="right"
@@ -49,10 +48,8 @@
         android:layout_width="56dp"
         android:layout_height="47dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/name"
-        app:layout_constraintHorizontal_bias="0.96"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/user_photo_chat_foreground" />
 </androidx.constraintlayout.widget.ConstraintLayout>
