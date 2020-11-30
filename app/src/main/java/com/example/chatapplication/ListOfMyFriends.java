@@ -267,6 +267,7 @@ public class ListOfMyFriends extends AppCompatActivity {
 
     public void profileBtn(View view) {
         startActivity(new Intent(this, ProfileActivity.class));
+        finish();
     }
 
 

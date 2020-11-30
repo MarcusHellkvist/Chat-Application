@@ -130,33 +130,43 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
         super.onStart();
         // REAL-TIME FOR USER INFO
         usersRef.document(currentUserId)
-                .addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+                .addSnapshotListener(ProfileActivity.this, new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (value.exists()){
-                            String name = value.getString("name");
-                            String phone = value.getString("phoneNumber");
-                            String email = value.getString("email");
-                            tvUsername.setText(name);
-                            tvPhone.setText(phone);
-                            tvEmail.setText(email);
+                        if (value != null){
+                            if (value.exists()){
+                                String name = value.getString("name");
+                                String phone = value.getString("phoneNumber");
+                                String email = value.getString("email");
+                                tvUsername.setText(name);
+                                tvPhone.setText(phone);
+                                tvEmail.setText(email);
+                            }
                         }
                     }
                 });
         //REAL-TIME FOR AMOUNT OF FRIENDS
         usersRef.document(currentUserId)
                 .collection("friends")
-                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                .addSnapshotListener(ProfileActivity.this, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         List<String> friends = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : value){
-                            friends.add(document.getId());
+                        if (value != null) {
+                            for (QueryDocumentSnapshot document : value) {
+                                friends.add(document.getId());
+                            }
+                            friendAmount = friends.size();
+                            tvAmountFriends.setText(friendAmount + "");
                         }
-                        friendAmount = friends.size();
-                        tvAmountFriends.setText(friendAmount + "");
                     }
                 });
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
 
     }
 
