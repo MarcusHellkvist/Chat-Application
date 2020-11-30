@@ -1,5 +1,6 @@
 package com.example.chatapplication;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,20 +17,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-
-
+import java.util.List;
+import java.util.Map;
 
 
 public class Chat_messages extends AppCompatActivity {
@@ -39,13 +45,13 @@ public class Chat_messages extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+    private List<String> namesDB;
 
 
     private RecyclerView messagesRecyclerView;
     private MessagesAdapter adapter;
 
-    private Bitmap userProfilePhoto;
-
+    private Bitmap ProfilePhotoFr;
 
 
     private ArrayList<Message> messages = new ArrayList<>();
@@ -65,7 +71,8 @@ public class Chat_messages extends AppCompatActivity {
 
     private ImageView profPHOTO;
     private TextView textNameUs;
-
+    private String friendNameDB;
+    private String fr;
 
 
     @Override
@@ -75,9 +82,6 @@ public class Chat_messages extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
-
-
 
 
         messages.clear();
@@ -91,13 +95,14 @@ public class Chat_messages extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
+        //friendNameDB = db.collection("users").document(userNName).get(Source.valueOf("name"));
+
         userNName = mAuth.getCurrentUser().getEmail();
         sendBtn = findViewById(R.id.send_message_button);
         editTextMessage = findViewById(R.id.editText_message);
         profPHOTO = findViewById(R.id.user_photo);
 
-        textNameUs = findViewById(R.id.text_user_name);
-        textNameUs.setText(userNName);
+        fr = mAuth.getCurrentUser().getUid();
 
 
 
@@ -122,7 +127,7 @@ public class Chat_messages extends AppCompatActivity {
 
 
         getUsPHoto();
-       // getFrPHoto();
+        // getFrPHoto();
         messagesRecyclerView.setAdapter(adapter);
 
         messagesRecyclerView.setLayoutManager(layoutManager);
@@ -154,6 +159,10 @@ public class Chat_messages extends AppCompatActivity {
 
 
         getFBMessages();
+       getNameForChat();
+
+        System.out.println("1111111111111111111111111111111111111: " + friendNameDB);
+
     }
 
     private void getFBMessages() {
@@ -195,37 +204,64 @@ public class Chat_messages extends AppCompatActivity {
     }
 
 
-        private void getUsPHoto() {
-
-        String refToFireStore = mAuth.getCurrentUser().getUid();
+    private void getUsPHoto() {
+        String refToFireStore = friendPhoto;
+        //String refToFireStore = mAuth.getCurrentUser().getUid();
         StorageReference profilePHUser = storageReference.child("images/" + refToFireStore);
         final long ONE_MEGABYTE = 1024 * 1024;
         profilePHUser.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                userProfilePhoto = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ProfilePhotoFr = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                profPHOTO.setImageBitmap(userProfilePhoto);
-
+                profPHOTO.setImageBitmap(ProfilePhotoFr);
 
 
             }
 
 
         });
-        Log.d("alona", " message photo" + userProfilePhoto);
+        Log.d("alona", " message photo" + ProfilePhotoFr);
 
 
     }
 
-  /*  private void getNameForUs (){
-        final String searchPhoneNumber = textNameUs.getText().toString().trim();
+    private void getNameForChat() {
 
-        db.collection("users")
-                .document(mAuth.getCurrentUser().getUid()).getChild("name");
-                        //("name", searchPhoneNumber);
-    }*/
 
+         DocumentReference docRef = db.collection("users").document(friendPhoto);
+    docRef.get().
+
+    addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        @Override
+        public void onComplete (@NonNull Task < DocumentSnapshot > task) {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null) {
+                    friendNameDB =  (String) document.getString("name");
+                   Log.i("alona", "First " + document.getString("name"));
+                   Log.i("alona", "First " + friendNameDB);
+                    textNameUs = findViewById(R.id.text_user_name);
+                    textNameUs.setText(friendNameDB);
+
+
+                } else {
+                    Log.d("LOGGER", "No such document");
+                }
+            } else {
+                Log.d("LOGGER", "get failed with ", task.getException());
+            }
+        }
+    });
+
+
+
+
+
+
+
+
+    }
 
 
 }
