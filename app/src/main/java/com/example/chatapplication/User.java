@@ -10,7 +10,7 @@ public class User {
     private String email;
     private String idFirebase;
     private String address;
-    private ArrayList<Bitmap> imageList;
+    private Bitmap picture;
 
 
     public User(String name, String phoneNumber, String email, String idFirebase,String address) {
@@ -33,6 +33,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public Bitmap getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Bitmap picture) {
+        this.picture = picture;
     }
 
     public String getName() {

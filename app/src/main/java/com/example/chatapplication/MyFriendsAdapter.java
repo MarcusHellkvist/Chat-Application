@@ -39,15 +39,12 @@ public class MyFriendsAdapter extends RecyclerView.Adapter<MyFriendsAdapter.Frie
     @Override
     public void onBindViewHolder(@NonNull FriendsViewHolder holder, int position) {
         User item = friendsList.get(position);
-        Log.d("TAG", "onBindViewHolder: "+ position);
         holder.myFriendsName.setText(item.getName());
-        if (imageListOfFriends.size() == 0) {
-            Log.d("TAG", "onBindViewHolder:  if log ");
-            holder.myFriendImage.setImageResource(R.drawable.defaultavatar);
+
+        if (friendsList.size() == 0 && item.getPicture() == null){
             return;
-        }
-        for (int i = 0; i <imageListOfFriends.size() ; i++) {
-            holder.myFriendImage.setImageBitmap(imageListOfFriends.get(i));
+        } else {
+            holder.myFriendImage.setImageBitmap(item.getPicture());
         }
     }
 
@@ -56,10 +53,10 @@ public class MyFriendsAdapter extends RecyclerView.Adapter<MyFriendsAdapter.Frie
         return friendsList.size();
     }
 
-    public MyFriendsAdapter(ArrayList<User> friendsList, ArrayList<Bitmap> imageListOfFriends) {
+    public MyFriendsAdapter(ArrayList<User> friendsList) {
         this.friendsList = friendsList;
         this.imageListOfFriends = imageListOfFriends;
-        //notifyDataSetChanged();
+
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {

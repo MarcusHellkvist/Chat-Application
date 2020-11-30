@@ -78,7 +78,7 @@ public class ListOfMyFriends extends AppCompatActivity {
 
         friendsRecyclerView = findViewById(R.id.list_of_my_friends_RecyclerView);
         friendsRecyclerView.setHasFixedSize(true);
-        myFriendsAdapter = new MyFriendsAdapter(myFriendsList, imageListOfFriends);
+        myFriendsAdapter = new MyFriendsAdapter(myFriendsList);
         friendsManager = new LinearLayoutManager(this);
         friendsRecyclerView.setLayoutManager(friendsManager);
         friendsRecyclerView.setAdapter(myFriendsAdapter);
@@ -108,7 +108,9 @@ public class ListOfMyFriends extends AppCompatActivity {
 
     // SHOW LIST OF FRIENDS
     private void showFriendList() {
-        Log.d("TAG", "showFriendList: " + friendListId.size());
+
+        myFriendsList.clear();
+
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -120,7 +122,7 @@ public class ListOfMyFriends extends AppCompatActivity {
                                 for (int i = 0; i < friendListId.size(); i++) {
                                     if (friendListId.get(i).contentEquals(documentId)) {
                                         // LÄGG TILL I FRIENDS ADAPTER
-                                        user = document.toObject(User.class);
+                                        final User user = document.toObject(User.class);
                                         myFriendsList.add(user);
                                         idUFriend = document.getId();
 
@@ -130,24 +132,19 @@ public class ListOfMyFriends extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                                     @Override
                                                     public void onSuccess(byte[] bytes) {
-                                                        Bitmap bitmap =
-                                                                BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                        imageListOfFriends.add(bitmap);
-                                                        Log.d("TAG", "onSuccess: " + imageListOfFriends.size());
+                                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                        user.setPicture(bitmap);
                                                         myFriendsAdapter.notifyDataSetChanged();
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Bitmap bitmap =
-                                                        BitmapFactory.decodeResource(getResources(), R.drawable.defaultavatar);
-                                                imageListOfFriends.add(bitmap);
-                                                Log.d("TAG", "onFailure: error " + e.getLocalizedMessage());
-
+                                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.defaultavatar);
+                                                user.setPicture(bitmap);
+                                                myFriendsAdapter.notifyDataSetChanged();
                                             }
 
                                         });
-                                        myFriendsAdapter.notifyDataSetChanged();
                                     }
                                 }
                             }
