@@ -7,11 +7,6 @@
     android:background="@color/colorBackground"
     tools:context=".Chat_messages">
 
-
-
-
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_userMessage"
         android:layout_width="360dp"

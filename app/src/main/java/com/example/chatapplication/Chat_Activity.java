@@ -1,6 +1,8 @@
 package com.example.chatapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ public class Chat_Activity extends AppCompatActivity {
 
     private Button btnProfile;
     private Button btnMyFriends;
+    private Toolbar myToolbarFriendActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +24,14 @@ public class Chat_Activity extends AppCompatActivity {
 
         //BUTTON VIEWS
         btnProfile = findViewById(R.id.btn_profile);
-        btnMyFriends = findViewById(R.id.btn_myfriends);
+        btnMyFriends = findViewById(R.id.my_profile_btn);
         btnProfile.setOnClickListener(goToProfileListener);
         btnMyFriends.setOnClickListener(goToMyFriendsListener);
 
-    }
-
-    public void logOutButtonPressed(View view) {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        //TOOLBAR
+        myToolbarFriendActivity = findViewById(R.id.my_toolbar_friendActivity);
+        setSupportActionBar(myToolbarFriendActivity);
+        ActionBar ab = getSupportActionBar();
     }
 
     private View.OnClickListener goToProfileListener = new View.OnClickListener() {

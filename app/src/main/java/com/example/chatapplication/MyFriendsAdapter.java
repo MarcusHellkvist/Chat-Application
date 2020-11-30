@@ -1,5 +1,7 @@
 package com.example.chatapplication;
 
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 public class MyFriendsAdapter extends RecyclerView.Adapter<MyFriendsAdapter.FriendsViewHolder> {
 
     private ArrayList<User> friendsList;
+    private ArrayList<Bitmap> imageListOfFriends;
 
     interface OnItemClickListener {
         void OnItemClicked(int position, View view);
@@ -36,7 +39,16 @@ public class MyFriendsAdapter extends RecyclerView.Adapter<MyFriendsAdapter.Frie
     @Override
     public void onBindViewHolder(@NonNull FriendsViewHolder holder, int position) {
         User item = friendsList.get(position);
+        Log.d("TAG", "onBindViewHolder: "+ position);
         holder.myFriendsName.setText(item.getName());
+        if (imageListOfFriends.size() == 0) {
+            Log.d("TAG", "onBindViewHolder:  if log ");
+            holder.myFriendImage.setImageResource(R.drawable.defaultavatar);
+            return;
+        }
+        for (int i = 0; i <imageListOfFriends.size() ; i++) {
+            holder.myFriendImage.setImageBitmap(imageListOfFriends.get(i));
+        }
     }
 
     @Override
@@ -44,9 +56,10 @@ public class MyFriendsAdapter extends RecyclerView.Adapter<MyFriendsAdapter.Frie
         return friendsList.size();
     }
 
-    public MyFriendsAdapter(ArrayList<User> friendsList) {
+    public MyFriendsAdapter(ArrayList<User> friendsList, ArrayList<Bitmap> imageListOfFriends) {
         this.friendsList = friendsList;
-        notifyDataSetChanged();
+        this.imageListOfFriends = imageListOfFriends;
+        //notifyDataSetChanged();
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {

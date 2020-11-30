@@ -1,0 +1,220 @@
+Index: app/src/main/java/com/example/chatapplication/AddFriends.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.chatapplication;\n\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.recyclerview.widget.LinearLayoutManager;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport android.os.Bundle;\nimport android.view.View;\nimport android.widget.EditText;\nimport android.widget.Toast;\n\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.OnSuccessListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.firestore.DocumentReference;\nimport com.google.firebase.firestore.FirebaseFirestore;\nimport com.google.firebase.firestore.QueryDocumentSnapshot;\nimport com.google.firebase.firestore.QuerySnapshot;\n\nimport java.util.ArrayList;\n\npublic class AddFriends extends AppCompatActivity {\n\n    private EditText searchEditText;\n\n    private RecyclerView searchRecyclerView;\n    private SearchAdapter searchAdapter;\n    private RecyclerView.LayoutManager searchManager;\n\n    private FirebaseAuth mAuth = FirebaseAuth.getInstance();\n    private FirebaseFirestore db = FirebaseFirestore.getInstance();\n    private DocumentReference userReference;\n\n    private String idUFriend;\n\n    private ArrayList<User> searchUser = new ArrayList<>();\n\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_add_friends);\n\n        searchRecyclerView = findViewById(R.id.search_RecyclerView);\n        searchEditText = findViewById(R.id.search_edit_text);\n\n        searchRecyclerView = findViewById(R.id.search_RecyclerView);\n        searchRecyclerView.setHasFixedSize(true);\n        searchAdapter = new SearchAdapter(searchUser);\n        searchManager = new LinearLayoutManager(this);\n        searchRecyclerView.setLayoutManager(searchManager);\n        searchRecyclerView.setAdapter(searchAdapter);\n\n        searchAdapter.setSearchOnItemClickListener(new SearchAdapter.OnItemClickListener() {\n            @Override\n            public void OnItemClicked(int position, View view) {\n                User newFriend = searchUser.get(position);\n            }\n        });\n\n    }\n\n    public void searchPressed(View view) {\n        searchUser.clear();\n        String searchText = searchEditText.getText().toString().toLowerCase().trim();\n        if (searchText.isEmpty()) {\n            searchUser.clear();\n        } else {\n            db.collection(\"users\")\n                    .whereEqualTo(\"name\", searchText)\n                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {\n                @Override\n                public void onComplete(@NonNull Task<QuerySnapshot> task) {\n                    if (task.isSuccessful()) {\n                        for (QueryDocumentSnapshot document : task.getResult()) {\n                            String friendName = document.getString(\"name\");\n                            String friendEmail = document.getString(\"email\");\n                            idUFriend = document.getId();\n                            //if (idUFriend == null) return;\n                            checkIfAlreadyFriend();\n                            searchUser.add(new User(friendName, friendEmail, idUFriend));\n                            searchAdapter.notifyDataSetChanged();\n                        }\n                    } else {\n                        Toast.makeText(AddFriends.this, task.getException().getLocalizedMessage(),\n                                Toast.LENGTH_SHORT).show();\n                    }\n                }\n\n            });\n        }\n        searchAdapter.notifyDataSetChanged();\n    }\n\n    public void checkIfAlreadyFriend() {\n        String idFirebase = mAuth.getCurrentUser().getUid();\n        db.collection(\"users\").document(idFirebase).collection(\"friends\")\n                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {\n            @Override\n            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {\n                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {\n                    String idFriend = document.getString(\"idFirebase\");\n                    if (idFriend.equals(idFriend)) return;\n                }\n            }\n        });\n\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/chatapplication/AddFriends.java	(revision 365840251766afcedf47f19b89cda34de6bd6bab)
++++ app/src/main/java/com/example/chatapplication/AddFriends.java	(date 1605516717000)
+@@ -1,25 +1,32 @@
+ package com.example.chatapplication;
+ 
+-import androidx.annotation.NonNull;
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.recyclerview.widget.LinearLayoutManager;
+-import androidx.recyclerview.widget.RecyclerView;
+-
++import android.content.Intent;
+ import android.os.Bundle;
++import android.util.Log;
+ import android.view.View;
+ import android.widget.EditText;
+ import android.widget.Toast;
+ 
++import androidx.annotation.NonNull;
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.recyclerview.widget.LinearLayoutManager;
++import androidx.recyclerview.widget.RecyclerView;
++
+ import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.OnFailureListener;
+ import com.google.android.gms.tasks.OnSuccessListener;
+ import com.google.android.gms.tasks.Task;
+ import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.firestore.CollectionReference;
+ import com.google.firebase.firestore.DocumentReference;
+ import com.google.firebase.firestore.FirebaseFirestore;
++import com.google.firebase.firestore.Query;
+ import com.google.firebase.firestore.QueryDocumentSnapshot;
+ import com.google.firebase.firestore.QuerySnapshot;
+ 
+ import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.Map;
+ 
+ public class AddFriends extends AppCompatActivity {
+ 
+@@ -31,11 +38,16 @@
+ 
+     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+-    private DocumentReference userReference;
+ 
+-    private String idUFriend;
++    private String idFirebase;
++    private User user;
++
++    private final CollectionReference usersCollectionRef = db.collection("users");
++    private DocumentReference documentReference;
++    private CollectionReference friendsCollectionRef;
+ 
+     private ArrayList<User> searchUser = new ArrayList<>();
++    private ArrayList<String> friendListIds = new ArrayList<>();
+ 
+ 
+     @Override
+@@ -43,6 +55,13 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_add_friends);
+ 
++
++        idFirebase = mAuth.getCurrentUser().getUid();
++
++        friendsCollectionRef = db.collection("users").document(idFirebase)
++                .collection("friends");
++
++
+         searchRecyclerView = findViewById(R.id.search_RecyclerView);
+         searchEditText = findViewById(R.id.search_edit_text);
+ 
+@@ -57,55 +76,96 @@
+             @Override
+             public void OnItemClicked(int position, View view) {
+                 User newFriend = searchUser.get(position);
++                profileIntent();
+             }
+-        });
++
++            // ADD FRIENDS ID TO CURRENT USER FRIENDS COLLECTIONS
++            @Override
++            public void OnAddIconClicked(int position, View view) {
++
++                final String friendUserId = searchUser.get(position).getIdFirebase();
++                Map<String, Object> newFriend = new HashMap<>();
++                newFriend.put("uID", friendUserId);
++
++                final Map<String, Object> newIdFirebase = new HashMap<>();
++                newIdFirebase.put("uID", idFirebase);
++
++
++
++                if (idFirebase.equals(friendUserId)) {
++                    Toast.makeText(AddFriends.this, "can't be friend", Toast.LENGTH_SHORT).show();
++                } else {
++                    //view.setBackgroundResource(R.drawable.check_icon);
++                    db.collection("users").document(idFirebase)
++                            .collection("friends").document(friendUserId)
++                            .set(newFriend)
++                            .addOnSuccessListener(new OnSuccessListener<Void>() {
++                                @Override
++                                public void onSuccess(Void aVoid) {
++                                    Toast.makeText(AddFriends.this, "new friend added.", Toast.LENGTH_SHORT).show();
++                                    db.collection("users").document(friendUserId)
++                                            .collection("friends").document(idFirebase)
++                                            .set(newIdFirebase);
++
++                                }
++                            })
++                            .addOnFailureListener(new OnFailureListener() {
++                                @Override
++                                public void onFailure(@NonNull Exception e) {
++                                    Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
++                                }
++                            });
++                }
+ 
++            }
++        });
+     }
+ 
++
++    // SEARCH FOR FRIENDS
+     public void searchPressed(View view) {
+         searchUser.clear();
+-        String searchText = searchEditText.getText().toString().toLowerCase().trim();
+-        if (searchText.isEmpty()) {
+-            searchUser.clear();
+-        } else {
+-            db.collection("users")
+-                    .whereEqualTo("name", searchText)
+-                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+-                @Override
+-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+-                    if (task.isSuccessful()) {
+-                        for (QueryDocumentSnapshot document : task.getResult()) {
+-                            String friendName = document.getString("name");
+-                            String friendEmail = document.getString("email");
+-                            idUFriend = document.getId();
+-                            //if (idUFriend == null) return;
+-                            checkIfAlreadyFriend();
+-                            searchUser.add(new User(friendName, friendEmail, idUFriend));
+-                            searchAdapter.notifyDataSetChanged();
+-                        }
+-                    } else {
+-                        Toast.makeText(AddFriends.this, task.getException().getLocalizedMessage(),
+-                                Toast.LENGTH_SHORT).show();
+-                    }
+-                }
+-
+-            });
+-        }
+-        searchAdapter.notifyDataSetChanged();
+-    }
+-
+-    public void checkIfAlreadyFriend() {
+-        String idFirebase = mAuth.getCurrentUser().getUid();
+-        db.collection("users").document(idFirebase).collection("friends")
+-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+-            @Override
+-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+-                    String idFriend = document.getString("idFirebase");
+-                    if (idFriend.equals(idFriend)) return;
+-                }
+-            }
+-        });
++
++        Toast.makeText(this, "search button pressed.", Toast.LENGTH_SHORT).show();
++        String searchPhoneNumber = searchEditText.getText().toString().trim();
++
++        db.collection("users")
++                .whereEqualTo("phoneNumber", searchPhoneNumber)
++                .get()
++                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
++                    @Override
++                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
++                        if (task.isSuccessful()) {
++                            for (QueryDocumentSnapshot document : task.getResult()) {
++                                user = document.toObject(User.class);
++                                searchUser.add(user);
++                            }
++                            searchAdapter.notifyDataSetChanged();
++                        }
++                    }
++                })
++                .addOnFailureListener(new OnFailureListener() {
++                    @Override
++                    public void onFailure(@NonNull Exception e) {
++                        Toast.makeText(AddFriends.this, "something went wrong: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
++                    }
++                });
++
++
++    }
++
++
++    public void chatIntent() {
++        startActivity(new Intent(this, Chat_Activity.class));
++    }
++
++    public void friendIntent() {
++        startActivity(new Intent(this, ListOfMyFriends.class));
++    }
+ 
++    public void profileIntent() {
++        startActivity(new Intent(this, ProfileActivity.class));
+     }
++
++
+ }

@@ -7,10 +7,56 @@
     tools:context=".ListOfMyFriends"
     android:background="@color/colorBackground">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar_friends"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_of_my_friends_RecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:layout_height="0dp"
+
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/add_friends_btn"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar_friends" />
+
+    <Button
+        android:id="@+id/add_friends_btn"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/small_white_bitton"
+
+        android:text="@string/add_friend"
+        android:onClick="addFriendBtn"
+        android:textColor="@color/colorTextWhiteButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/my_profile_btn"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/small_white_bitton"
+        android:text="Profile"
+        android:onClick="profileBtn"
+        android:textColor="@color/colorTextWhiteButton"
+        app:layout_constraintBottom_toBottomOf="@+id/add_friends_btn"
+        app:layout_constraintEnd_toStartOf="@+id/btn_profile"
+        app:layout_constraintStart_toEndOf="@+id/add_friends_btn" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

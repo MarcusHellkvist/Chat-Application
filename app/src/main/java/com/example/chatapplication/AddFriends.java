@@ -75,6 +75,7 @@ public class AddFriends extends AppCompatActivity {
         myToolbarAddFriend = findViewById(R.id.my_toolbar_addFriend);
         setSupportActionBar(myToolbarAddFriend);
         ActionBar ab = getSupportActionBar();
+        ab.setTitle("Add friends");
         ab.setDisplayHomeAsUpEnabled(true);
 
         storage = FirebaseStorage.getInstance();
@@ -104,7 +105,8 @@ public class AddFriends extends AppCompatActivity {
             @Override
             public void OnItemClicked(int position, View view) {
                 User newFriend = searchUser.get(position);
-                profileIntent();
+                String friendId = searchUser.get(position).getIdFirebase();
+                profileIntent(friendId);
             }
 
             // ADD FRIENDS ID TO CURRENT USER FRIENDS COLLECTIONS
@@ -176,7 +178,6 @@ public class AddFriends extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                             @Override
                                             public void onSuccess(byte[] bytes) {
-
                                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                                 imageBitmap.add(bitmap);
                                                 searchAdapter.notifyDataSetChanged();
@@ -210,8 +211,10 @@ public class AddFriends extends AppCompatActivity {
         startActivity(new Intent(this, ListOfMyFriends.class));
     }
 
-    public void profileIntent() {
-        startActivity(new Intent(this, ProfileActivity.class));
+    public void profileIntent(String friendId) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("uid", friendId);
+        startActivity(intent);
     }
 
 
