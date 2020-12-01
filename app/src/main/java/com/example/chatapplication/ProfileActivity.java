@@ -118,10 +118,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileDialog.
             ivPenIcon.setVisibility(View.INVISIBLE);
         }
 
-
         getProfilePicture();
-
-        // TODO Animations!
 
     }
 
