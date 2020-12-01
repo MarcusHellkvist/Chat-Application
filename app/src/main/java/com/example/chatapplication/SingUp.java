@@ -75,6 +75,7 @@ public class SingUp extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 Intent intent = new Intent(SingUp.this, ListOfMyFriends.class);
                                 startActivity(intent);
+                                finish();
                                 Log.d("Jenny", "Ny använade skall vara skapad");
                             }
                         });
